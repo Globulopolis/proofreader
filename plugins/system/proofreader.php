@@ -91,7 +91,7 @@ class plgSystemProofreader extends JPlugin
 
 		if ($app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && $offline === 0)
 		{
-			$buffer = JResponse::getBody();
+			$buffer = $app->getBody();
 			$form   = $app->getUserState('com_proofreader.typo.form');
 
 			if (!empty($buffer) && !empty($form))
@@ -107,7 +107,7 @@ class plgSystemProofreader extends JPlugin
 				}
 
 				$buffer = str_replace('</body>', $form . '</body>', $buffer);
-				JResponse::setBody($buffer);
+				$app->setBody($buffer);
 			}
 		}
 
@@ -135,7 +135,7 @@ class plgSystemProofreader extends JPlugin
 					if ($this->params->get('disable_css', 0) == 0)
 					{
 						$style = JFactory::getLanguage()->isRTL() ? 'style_rtl.min.css' : 'style.min.css';
-						JHtml::_('stylesheet', 'com_proofreader/' . $style, false, true, false);
+						JHtml::stylesheet('com_proofreader/' . $style, $options = array('relative' => true));
 					}
 
 					if (version_compare(JVERSION, '3.0', 'ge'))
@@ -147,7 +147,7 @@ class plgSystemProofreader extends JPlugin
 						JHtml::_('script', 'com_proofreader/jquery.min.js', false, true, false);
 					}
 
-					JHtml::_('script', 'com_proofreader/jquery.proofreader.min.js', false, true, false);
+					JHtml::script('com_proofreader/jquery.proofreader.min.js', $options = array('relative' => true));
 
 					$this->initForm();
 
