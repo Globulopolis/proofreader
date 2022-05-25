@@ -1,0 +1,12 @@
+2.1.0 - May 25, 2022
+Add basic compatibility with Joomla 4:
+  - modify SQL:
+    - remove default values for text columns;
+    - drop unused typo_raw column;
+  - replace JResponse with JApplication;
+  - add J4-style call for functions adding script and stylesheet;
+  - add routing class (not J4-style but enough to make extension work).
+Fix bugs:
+  - remove blank lines at the top and at the bottom of the document if highlight option is active;
+  - prevent hidden form fields tags and attributes from being glued so they didn't work.
+Update metadata.
