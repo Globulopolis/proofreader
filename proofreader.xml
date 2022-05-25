@@ -7,7 +7,7 @@
 	<authorUrl>http://www.joomlatune.com</authorUrl>
 	<copyright>Copyright 2005-2015 JoomlaTune.ru All rights reserved!</copyright>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	<version>2.1.0alpha</version>
+	<version>2.1.0</version>
 	<description>COM_PROOFREADER_XML_DESCRIPTION</description>
 
 	<scriptfile>script.php</scriptfile>
