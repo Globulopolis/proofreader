@@ -46,7 +46,7 @@ class plgSystemProofreader extends JPlugin
 			$app      = JFactory::getApplication();
 			$document = JFactory::getDocument();
 			$print    = (int) $app->input->get('print', 0);
-			$offline  = (int) $app->get('offline', 0);
+			$offline  = 0; //(int) $app->get('offline', 0);
 
 			if ($app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && $offline === 0)
 			{
@@ -87,7 +87,7 @@ class plgSystemProofreader extends JPlugin
 		$app      = JFactory::getApplication();
 		$document = JFactory::getDocument();
 		$print    = (int) $app->input->get('print', 0);
-		$offline  = (int) $app->get('offline', 0);
+		$offline  = 0; //(int) $app->get('offline', 0);
 
 		if ($app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && $offline === 0)
 		{
@@ -101,8 +101,8 @@ class plgSystemProofreader extends JPlugin
 					$user = JFactory::getUser();
 					if ($user->authorise('core.admin') || $user->authorise('core.manage', 'com_proofreader'))
 					{
-						$buffer = preg_replace('#(<body[^\>]*?>)#ism', '\\1<br id="proofreader_highlighter_start" />', $buffer);
-						$buffer = str_replace('</body>', '<br id="proofreader_highlighter_end" /></body>', $buffer);
+						$buffer = preg_replace('#(<body[^\>]*?>)#ism', '\\1<div id="proofreader_highlighter_start" style="display:none"></div>', $buffer);
+						$buffer = str_replace('</body>', '<div id="proofreader_highlighter_end" style="display:none"></div></body>', $buffer);
 					}
 				}
 
@@ -124,7 +124,7 @@ class plgSystemProofreader extends JPlugin
 		$app      = JFactory::getApplication();
 		$document = JFactory::getDocument();
 		$print    = (int) $app->input->get('print', 0);
-		$offline  = (int) $app->get('offline', 0);
+		$offline  = 0; //(int) $app->get('offline', 0);
 
 		if ($document->getType() == 'html')
 		{
@@ -201,7 +201,7 @@ class plgSystemProofreader extends JPlugin
 
 			foreach ($rows as $row)
 			{
-				$cleanTerms[] = htmlspecialchars($filter->clean($row->typo_text, 'string'));
+				$cleanTerms[] = $row->typo_text;
 			}
 
 			JHtml::_('behavior.highlighter', $cleanTerms, 'proofreader_highlighter_start', 'proofreader_highlighter_end', 'proofreader_highlight');
