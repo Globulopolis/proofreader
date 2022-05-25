@@ -18,7 +18,7 @@ defined('_JEXEC') or die;
  *
  * @return array The URL arguments to use to assemble the subsequent URL.
  */
-function ProofreaderBuildRoute(& $query)
+function ProofreaderBuildRoute(&$query)
 {
 	$segments = array();
 
@@ -56,7 +56,7 @@ function ProofreaderBuildRoute(& $query)
  *
  * @return array The URL attributes to be used by the application.
  */
-function ProofreaderParseRoute($segments)
+function ProofreaderParseRoute(&$segments)
 {
 	$vars = array();
 
@@ -76,7 +76,23 @@ function ProofreaderParseRoute($segments)
 				$vars['task'] = $segments[0];
 				break;
 		}
+        
+        unset($segments[0]);
 	}
 
 	return $vars;
+}
+
+
+class ProofreaderRouter extends JComponentRouterBase
+{
+    public function build(&$query)
+    {
+        return ProofreaderBuildRoute($query);
+    }
+    
+    public function parse(&$segments)
+    {
+        return ProofreaderParseRoute($segments);
+    }
 }
