@@ -2,7 +2,6 @@ CREATE TABLE IF NOT EXISTS "#__proofreader_typos" (
   "id" serial NOT NULL,
   "typo_text" text NOT NULL,
   "typo_prefix" text DEFAULT '' NOT NULL,
-  "typo_raw" text DEFAULT '' NOT NULL,
   "typo_suffix" text DEFAULT '' NOT NULL,
   "typo_comment" text DEFAULT '' NOT NULL,
   "page_url" character varying(255) DEFAULT '' NOT NULL,

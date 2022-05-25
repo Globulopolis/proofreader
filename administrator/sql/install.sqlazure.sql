@@ -8,7 +8,6 @@ IF NOT EXISTS(SELECT *
       [id] [BIGINT] IDENTITY (1, 1) NOT NULL,
       [typo_text] [NVARCHAR](MAX) NOT NULL,
       [typo_prefix] [NVARCHAR](MAX) NOT NULL DEFAULT '',
-      [typo_raw] [NVARCHAR](MAX) NOT NULL DEFAULT '',
       [typo_suffix] [NVARCHAR](MAX) NOT NULL DEFAULT '',
       [typo_comment] [NVARCHAR](MAX) NOT NULL DEFAULT '',
       [page_url] [NVARCHAR](255) NOT NULL DEFAULT '',
