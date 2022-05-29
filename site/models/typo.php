@@ -109,6 +109,11 @@ class ProofreaderModelTypo extends JModelForm
 		$table->created_by_ip   = JFactory::getApplication()->input->server->get('REMOTE_ADDR', '', 'string');
 		$table->created_by_name = $user->get('name');
 
+        if (!$table->typo_comment)
+        {
+            $table->typo_comment = '';
+        }
+
 		if (!$table->check())
 		{
 			$this->setError($table->getError());

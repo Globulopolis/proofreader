@@ -46,9 +46,10 @@ class plgSystemProofreader extends JPlugin
 			$app      = JFactory::getApplication();
 			$document = JFactory::getDocument();
 			$print    = (int) $app->input->get('print', 0);
-			$offline  = 0; //(int) $app->get('offline', 0);
+			$offline  = (int) $app->get('offline', 0);
+            $debug    = (int) $app->get('debug', 0);
 
-			if ($app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && $offline === 0)
+			if ($app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && ($offline === 0 || $debug === 1))
 			{
 				$headData    = $document->getHeadData();
 				$scripts     = array_keys($headData['scripts']);
@@ -87,9 +88,10 @@ class plgSystemProofreader extends JPlugin
 		$app      = JFactory::getApplication();
 		$document = JFactory::getDocument();
 		$print    = (int) $app->input->get('print', 0);
-		$offline  = 0; //(int) $app->get('offline', 0);
+		$offline  = (int) $app->get('offline', 0);
+        $debug    = (int) $app->get('debug', 0);
 
-		if ($app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && $offline === 0)
+		if ($app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && ($offline === 0 || $debug === 1))
 		{
 			$buffer = $app->getBody();
 			$form   = $app->getUserState('com_proofreader.typo.form');
@@ -124,18 +126,26 @@ class plgSystemProofreader extends JPlugin
 		$app      = JFactory::getApplication();
 		$document = JFactory::getDocument();
 		$print    = (int) $app->input->get('print', 0);
-		$offline  = 0; //(int) $app->get('offline', 0);
+		$offline  = (int) $app->get('offline', 0);
+        $debug    = (int) $app->get('debug', 0);
 
 		if ($document->getType() == 'html')
 		{
 			if ($app->getName() == 'site')
 			{
-				if ($print === 0 && $offline === 0)
+				if ($print === 0 && ($offline === 0 || $debug === 1))
 				{
 					if ($this->params->get('disable_css', 0) == 0)
 					{
 						$style = JFactory::getLanguage()->isRTL() ? 'style_rtl.min.css' : 'style.min.css';
-						JHtml::stylesheet('com_proofreader/' . $style, $options = array('relative' => true));
+                        if (version_compare(JVERSION, '4.0', 'ge'))
+                        {
+                            JHtml::stylesheet('com_proofreader/' . $style, $options = array('relative' => true));
+                        }
+                        else
+                        {
+                            JHtml::stylesheet('com_proofreader/' . $style, false, true, false);
+                        }
 					}
 
 					if (version_compare(JVERSION, '3.0', 'ge'))
@@ -147,7 +157,14 @@ class plgSystemProofreader extends JPlugin
 						JHtml::_('script', 'com_proofreader/jquery.min.js', false, true, false);
 					}
 
-					JHtml::script('com_proofreader/jquery.proofreader.min.js', $options = array('relative' => true));
+                    if (version_compare(JVERSION, '4.0', 'ge'))
+                    {
+                        JHtml::script('com_proofreader/jquery.proofreader.min.js', $options = array('relative' => true));
+                    }
+                    else
+                    {
+                        JHtml::script('com_proofreader/jquery.proofreader.min.js', false, true, false);
+                    }
 
 					$this->initForm();
 
