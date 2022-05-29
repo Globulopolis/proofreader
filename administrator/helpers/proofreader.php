@@ -27,7 +27,11 @@ class ProofreaderHelper
 	 */
 	public static function addSubmenu($vName)
 	{
-		if (version_compare(JVERSION, '3.0', 'ge'))
+        if (version_compare(JVERSION, '4.0', 'ge'))
+        {
+            return;
+        }
+		elseif (version_compare(JVERSION, '3.0', 'ge'))
 		{
 			JHtmlSidebar::addEntry(
 				JText::_('COM_PROOFREADER_SUBMENU_TYPOS'),

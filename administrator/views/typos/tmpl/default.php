@@ -35,7 +35,14 @@ $containerClass = empty($this->sidebar) ? '' : 'span10';
 		</div>
 	<?php endif; ?>
 	<div id="j-main-container" class="<?php echo $containerClass; ?>">
-		<?php echo $this->loadTemplate('filter'); ?>
+		<?php if (version_compare(JVERSION, '4.0', 'ge'))
+        {
+            //echo Joomla\CMS\Layout\LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+        }
+        else
+        {
+            echo $this->loadTemplate('filter');
+        } ?>
 
 		<table class="adminlist table table-striped" id="articleList" cellspacing="1">
 			<thead>
