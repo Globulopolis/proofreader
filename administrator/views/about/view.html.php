@@ -26,18 +26,21 @@ class ProofreaderViewAbout extends JViewLegacy
 
 		JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 		JHtml::_('proofreader.stylesheet');
-		JHtml::_('behavior.framework');
 
-		if (version_compare(JVERSION, '3.0', 'ge'))
-		{
-			ProofreaderHelper::addSubmenu('about');
-			$this->bootstrap = true;
-			$this->sidebar   = JHtmlSidebar::render();
-		}
-		else
-		{
-			ProofreaderHelper::addSubmenu('about');
-		}
+        if (version_compare(JVERSION, '4.0', 'le'))
+        {
+            JHtml::_('behavior.framework');
+            if (version_compare(JVERSION, '3.0', 'ge'))
+            {
+                ProofreaderHelper::addSubmenu('about');
+                $this->bootstrap = true;
+                $this->sidebar   = JHtmlSidebar::render();
+            }
+            else
+            {
+                ProofreaderHelper::addSubmenu('about');
+            }
+        }
 
 		$this->addToolbar();
 
