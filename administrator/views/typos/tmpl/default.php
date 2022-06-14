@@ -88,7 +88,7 @@ $containerClass = empty($this->sidebar) ? '' : 'span10';
 					<td class="center hidden-phone">
 						<?php echo JHTML::_('grid.id', $i, $item->id); ?>
 					</td>
-					<td class="nowrap has-context">
+					<td class="has-context">
 						<?php echo $this->escape($item->typo_text); ?>
 					</td>
 					<td class="left hidden-phone">
