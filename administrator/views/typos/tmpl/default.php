@@ -37,7 +37,7 @@ $containerClass = empty($this->sidebar) ? '' : 'span10';
 	<div id="j-main-container" class="<?php echo $containerClass; ?>">
 		<?php if (version_compare(JVERSION, '4.0', 'ge'))
         {
-            //echo Joomla\CMS\Layout\LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+            echo Joomla\CMS\Layout\LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
         }
         else
         {
@@ -121,8 +121,10 @@ $containerClass = empty($this->sidebar) ? '' : 'span10';
 
 		<input type="hidden" name="task" value=""/>
 		<input type="hidden" name="boxchecked" value="0"/>
-		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-		<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirection; ?>"/>
+        <?php if (version_compare(JVERSION, '4.0', 'le')) : ?>
+            <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
+            <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirection; ?>"/>
+        <?php endif; ?>
 		<?php echo JHTML::_('form.token'); ?>
 	</div>
 </form>
