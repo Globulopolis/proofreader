@@ -47,8 +47,9 @@ class plgSystemProofreader extends JPlugin
 			$document = JFactory::getDocument();
 			$print    = (int) $app->input->get('print', 0);
 			$offline  = (int) $app->get('offline', 0);
+            $debug    = (int) $app->get('debug', 0);
 
-			if ($app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && $offline === 0)
+			if ($app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && ($offline === 0 || $debug === 1))
 			{
 				$headData    = $document->getHeadData();
 				$scripts     = array_keys($headData['scripts']);
@@ -88,10 +89,11 @@ class plgSystemProofreader extends JPlugin
 		$document = JFactory::getDocument();
 		$print    = (int) $app->input->get('print', 0);
 		$offline  = (int) $app->get('offline', 0);
+        $debug    = (int) $app->get('debug', 0);
 
-		if ($app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && $offline === 0)
+		if ($app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && ($offline === 0 || $debug === 1))
 		{
-			$buffer = JResponse::getBody();
+			$buffer = $app->getBody();
 			$form   = $app->getUserState('com_proofreader.typo.form');
 
 			if (!empty($buffer) && !empty($form))
@@ -101,13 +103,13 @@ class plgSystemProofreader extends JPlugin
 					$user = JFactory::getUser();
 					if ($user->authorise('core.admin') || $user->authorise('core.manage', 'com_proofreader'))
 					{
-						$buffer = preg_replace('#(<body[^\>]*?>)#ism', '\\1<br id="proofreader_highlighter_start" />', $buffer);
-						$buffer = str_replace('</body>', '<br id="proofreader_highlighter_end" /></body>', $buffer);
+						$buffer = preg_replace('#(<body[^\>]*?>)#ism', '\\1<div id="proofreader_highlighter_start" style="display:none"></div>', $buffer);
+						$buffer = str_replace('</body>', '<div id="proofreader_highlighter_end" style="display:none"></div></body>', $buffer);
 					}
 				}
 
 				$buffer = str_replace('</body>', $form . '</body>', $buffer);
-				JResponse::setBody($buffer);
+				$app->setBody($buffer);
 			}
 		}
 
@@ -125,17 +127,25 @@ class plgSystemProofreader extends JPlugin
 		$document = JFactory::getDocument();
 		$print    = (int) $app->input->get('print', 0);
 		$offline  = (int) $app->get('offline', 0);
+        $debug    = (int) $app->get('debug', 0);
 
 		if ($document->getType() == 'html')
 		{
 			if ($app->getName() == 'site')
 			{
-				if ($print === 0 && $offline === 0)
+				if ($print === 0 && ($offline === 0 || $debug === 1))
 				{
 					if ($this->params->get('disable_css', 0) == 0)
 					{
 						$style = JFactory::getLanguage()->isRTL() ? 'style_rtl.min.css' : 'style.min.css';
-						JHtml::_('stylesheet', 'com_proofreader/' . $style, false, true, false);
+                        if (version_compare(JVERSION, '4.0', 'ge'))
+                        {
+                            JHtml::stylesheet('com_proofreader/' . $style, $options = array('relative' => true));
+                        }
+                        else
+                        {
+                            JHtml::stylesheet('com_proofreader/' . $style, false, true, false);
+                        }
 					}
 
 					if (version_compare(JVERSION, '3.0', 'ge'))
@@ -147,7 +157,14 @@ class plgSystemProofreader extends JPlugin
 						JHtml::_('script', 'com_proofreader/jquery.min.js', false, true, false);
 					}
 
-					JHtml::_('script', 'com_proofreader/jquery.proofreader.min.js', false, true, false);
+                    if (version_compare(JVERSION, '4.0', 'ge'))
+                    {
+                        JHtml::script('com_proofreader/jquery.proofreader.min.js', $options = array('relative' => true));
+                    }
+                    else
+                    {
+                        JHtml::script('com_proofreader/jquery.proofreader.min.js', false, true, false);
+                    }
 
 					$this->initForm();
 
@@ -201,7 +218,7 @@ class plgSystemProofreader extends JPlugin
 
 			foreach ($rows as $row)
 			{
-				$cleanTerms[] = htmlspecialchars($filter->clean($row->typo_text, 'string'));
+				$cleanTerms[] = $row->typo_text;
 			}
 
 			JHtml::_('behavior.highlighter', $cleanTerms, 'proofreader_highlighter_start', 'proofreader_highlighter_end', 'proofreader_highlight');

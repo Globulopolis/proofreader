@@ -33,7 +33,12 @@ class ProofreaderViewTypos extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->authors    = $this->get('Authors');
 
-		if (version_compare(JVERSION, '3.0', 'ge'))
+        if (version_compare(JVERSION, '4.0', 'ge'))
+        {
+            $this->filterForm = $this->get('FilterForm');
+        }
+
+		if (version_compare(JVERSION, '3.0', 'ge') && version_compare(JVERSION, '4.0', 'le'))
 		{
 			JHtml::_('bootstrap.tooltip');
 			JHtml::_('formbehavior.chosen', 'select');

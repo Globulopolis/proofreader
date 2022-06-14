@@ -58,7 +58,7 @@ class ProofreaderFormHelper
 		}
 
 		$html = ProofreaderLayoutHelper::render('proofreader', $displayData, JPATH_SITE . '/components/com_proofreader/layouts');
-		$html = preg_replace('/([\t\r\n])/im', '', $html);
+		$html = preg_replace('/([\t\r\n])/im', ' ', $html);
 		$html = preg_replace('/(\s){2,}/im', '\\1', $html);
 		$html = preg_replace('/(\)|\:)\s(\{|\')/im', '\\1\\2', $html);
 

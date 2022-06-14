@@ -35,7 +35,14 @@ $containerClass = empty($this->sidebar) ? '' : 'span10';
 		</div>
 	<?php endif; ?>
 	<div id="j-main-container" class="<?php echo $containerClass; ?>">
-		<?php echo $this->loadTemplate('filter'); ?>
+		<?php if (version_compare(JVERSION, '4.0', 'ge'))
+        {
+            echo Joomla\CMS\Layout\LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+        }
+        else
+        {
+            echo $this->loadTemplate('filter');
+        } ?>
 
 		<table class="adminlist table table-striped" id="articleList" cellspacing="1">
 			<thead>
@@ -81,7 +88,7 @@ $containerClass = empty($this->sidebar) ? '' : 'span10';
 					<td class="center hidden-phone">
 						<?php echo JHTML::_('grid.id', $i, $item->id); ?>
 					</td>
-					<td class="nowrap has-context">
+					<td class="has-context">
 						<?php echo $this->escape($item->typo_text); ?>
 					</td>
 					<td class="left hidden-phone">
@@ -114,8 +121,10 @@ $containerClass = empty($this->sidebar) ? '' : 'span10';
 
 		<input type="hidden" name="task" value=""/>
 		<input type="hidden" name="boxchecked" value="0"/>
-		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-		<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirection; ?>"/>
+        <?php if (version_compare(JVERSION, '4.0', 'le')) : ?>
+            <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
+            <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirection; ?>"/>
+        <?php endif; ?>
 		<?php echo JHTML::_('form.token'); ?>
 	</div>
 </form>
