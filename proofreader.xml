@@ -164,8 +164,8 @@
     </plugins>
 
     <updateservers>
-        <server type="extension" priority="1" name="Proofreader Update Site">
-            http://www.joomlatune.ru/updates/proofreader.xml
+        <server type="extension" priority="1" name="Proofreader Updates">
+            https://github.com/PavelSyomin/proofreader/raw/develop/proofreader_update.xml
         </server>
     </updateservers>
 </extension>
