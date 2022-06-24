@@ -3,7 +3,7 @@
     <update>
         <name>Proofreader</name>
         <description>This is Proofreader 2.1.2</description>
-        <element>proofreader</element>
+        <element>com_proofreader</element>
         <type>component</type>
         <client>administrator</client>
         <version>2.1.2</version>
