@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5" type="plugin" group="quickicon" method="upgrade">
-	<name>plg_quickicon_proofreader</name>
-	<creationDate>11/07/2015</creationDate>
-	<author>smart</author>
-	<copyright>Copyright 2005-2015 JoomlaTune Team. All rights reserved!</copyright>
-	<authorEmail>smart@joomlatune.com</authorEmail>
-	<authorUrl>http://www.joomlatune.com</authorUrl>
-	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	<version>2.0.3</version>
-	<description>PLG_QUICKICON_PROOFREADER_XML_DESCRIPTION</description>
-	<files>
-		<filename plugin="proofreader">proofreader.php</filename>
-	</files>
-	<config>
-		<fields name="params">
-			<fieldset name="basic">
-				<field
-						name="context"
-						type="text"
-						default="mod_quickicon"
-						description="PLG_QUICKICON_PROOFREADER_GROUP_DESC"
-						label="PLG_QUICKICON_PROOFREADER_GROUP_LABEL"/>
-			</fieldset>
-		</fields>
-	</config>
+    <name>plg_quickicon_proofreader</name>
+    <creationDate>11/07/2015</creationDate>
+    <author>Sergey M. Litvinov; Pavel Syomin</author>
+    <authorEmail>pas.ntg@gmail.com</authorEmail>
+    <copyright>Copyright 2005-2015 JoomlaTune.ru; Copyright 2022 Pavel Syomin All rights reserved!</copyright>
+    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <version>2.1.1</version>
+    <description>PLG_QUICKICON_PROOFREADER_XML_DESCRIPTION</description>
+    <files>
+        <filename plugin="proofreader">proofreader.php</filename>
+    </files>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field
+                        name="context"
+                        type="text"
+                        default="mod_quickicon"
+                        description="PLG_QUICKICON_PROOFREADER_GROUP_DESC"
+                        label="PLG_QUICKICON_PROOFREADER_GROUP_LABEL"/>
+            </fieldset>
+        </fields>
+    </config>
 </extension>

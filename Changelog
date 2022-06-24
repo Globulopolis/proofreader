@@ -14,3 +14,9 @@ Fix bugs:
   - fix a bug with table overflow in admin on Joomla 3.
 Add a feature: plugin works in debug mode even if the site if offline (useful for testing and development).
 Update metadata.
+
+2.1.1 - June 24, 2022
+Fixes to pass JED Checker check:
+  - remove _QQ_ in language files;
+  - remove donations;
+  - update copyrights, author names and email, remove author url in manifest files.
