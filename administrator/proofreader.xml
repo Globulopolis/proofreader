@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" method="upgrade">
+	<name>com_proofreader</name>
+	<creationDate>11/07/2015</creationDate>
+	<author>Sergey M. Litvinov; Pavel Syomin</author>
+	<authorEmail>pas.ntg@gmail.com</authorEmail>
+	<copyright>Copyright 2005-2015 JoomlaTune.ru; Copyright 2022 Pavel Syomin All rights reserved!</copyright>
+	<license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<version>3.0</version>
+	<description>COM_PROOFREADER_XML_DESCRIPTION</description>
+	<namespace path="src">Joomla\Component\Proofreader</namespace>
+
+	<scriptfile>script.php</scriptfile>
+
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.sql</file>
+			<file driver="mysqli" charset="utf8">sql/install.mysql.sql</file>
+			<file driver="postgresql" charset="utf8">sql/install.postgresql.sql</file>
+			<file driver="sqlazure" charset="utf8">sql/install.sqlazure.sql</file>
+		</sql>
+	</install>
+
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.mysql.sql</file>
+			<file driver="mysqli" charset="utf8">sql/uninstall.mysql.sql</file>
+			<file driver="postgresql" charset="utf8">sql/uninstall.postgresql.sql</file>
+			<file driver="sqlazure" charset="utf8">sql/uninstall.sqlazure.sql</file>
+		</sql>
+	</uninstall>
+
+	<update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+			<schemapath type="mysqli">sql/updates/mysql</schemapath>
+			<schemapath type="postgresql">sql/updates/postgresql</schemapath>
+			<schemapath type="sqlazure">sql/updates/sqlazure</schemapath>
+		</schemas>
+	</update>
+
+	<files folder="site">
+		<folder>forms</folder>
+		<folder>layouts</folder>
+		<folder>src</folder>
+		<folder>tmpl</folder>
+	</files>
+
+	<media destination="com_proofreader" folder="media">
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+	</media>
+
+	<languages folder="site/language">
+		<language tag="ar-AA">ar-AA/com_proofreader.ini</language>
+		<language tag="az-AZ">az-AZ/com_proofreader.ini</language>
+		<language tag="be-BY">be-BY/com_proofreader.ini</language>
+		<language tag="bg-BG">bg-BG/com_proofreader.ini</language>
+		<language tag="bs-BA">bs-BA/com_proofreader.ini</language>
+		<language tag="ca-ES">ca-ES/com_proofreader.ini</language>
+		<language tag="cs-CZ">cs-CZ/com_proofreader.ini</language>
+		<language tag="da-DK">da-DK/com_proofreader.ini</language>
+		<language tag="de-DE">de-DE/com_proofreader.ini</language>
+		<language tag="el-GR">el-GR/com_proofreader.ini</language>
+		<language tag="en-GB">en-GB/com_proofreader.ini</language>
+		<language tag="eo-XX">eo-XX/com_proofreader.ini</language>
+		<language tag="es-ES">es-ES/com_proofreader.ini</language>
+		<language tag="es-MX">es-MX/com_proofreader.ini</language>
+		<language tag="et-EE">et-EE/com_proofreader.ini</language>
+		<language tag="fa-IR">fa-IR/com_proofreader.ini</language>
+		<language tag="fi-FI">fi-FI/com_proofreader.ini</language>
+		<language tag="fr-FR">fr-FR/com_proofreader.ini</language>
+		<language tag="gl-ES">gl-ES/com_proofreader.ini</language>
+		<language tag="he-IL">he-IL/com_proofreader.ini</language>
+		<language tag="hi-IN">hi-IN/com_proofreader.ini</language>
+		<language tag="hr-HR">hr-HR/com_proofreader.ini</language>
+		<language tag="hu-HU">hu-HU/com_proofreader.ini</language>
+		<language tag="id-ID">id-ID/com_proofreader.ini</language>
+		<language tag="it-IT">it-IT/com_proofreader.ini</language>
+		<language tag="ja-JP">ja-JP/com_proofreader.ini</language>
+		<language tag="km-KH">km-KH/com_proofreader.ini</language>
+		<language tag="ko-KR">ko-KR/com_proofreader.ini</language>
+		<language tag="ku-IQ">ku-IQ/com_proofreader.ini</language>
+		<language tag="ku_IQ">ku_IQ/com_proofreader.ini</language>
+		<language tag="lt-LT">lt-LT/com_proofreader.ini</language>
+		<language tag="lv-LV">lv-LV/com_proofreader.ini</language>
+		<language tag="mk-MK">mk-MK/com_proofreader.ini</language>
+		<language tag="mn-MN">mn-MN/com_proofreader.ini</language>
+		<language tag="nb-NO">nb-NO/com_proofreader.ini</language>
+		<language tag="nl-NL">nl-NL/com_proofreader.ini</language>
+		<language tag="pl-PL">pl-PL/com_proofreader.ini</language>
+		<language tag="pt-BR">pt-BR/com_proofreader.ini</language>
+		<language tag="pt-PT">pt-PT/com_proofreader.ini</language>
+		<language tag="ro-RO">ro-RO/com_proofreader.ini</language>
+		<language tag="ru-RU">ru-RU/com_proofreader.ini</language>
+		<language tag="sk-SK">sk-SK/com_proofreader.ini</language>
+		<language tag="sl-SI">sl-SI/com_proofreader.ini</language>
+		<language tag="sq-AL">sq-AL/com_proofreader.ini</language>
+		<language tag="sr-RS">sr-RS/com_proofreader.ini</language>
+		<language tag="sr-YU">sr-YU/com_proofreader.ini</language>
+		<language tag="sv-SE">sv-SE/com_proofreader.ini</language>
+		<language tag="te-IN">te-IN/com_proofreader.ini</language>
+		<language tag="th-TH">th-TH/com_proofreader.ini</language>
+		<language tag="tl_PH">tl_PH/com_proofreader.ini</language>
+		<language tag="tr-TR">tr-TR/com_proofreader.ini</language>
+		<language tag="uk-UA">uk-UA/com_proofreader.ini</language>
+		<language tag="ur-PK">ur-PK/com_proofreader.ini</language>
+		<language tag="vi-VN">vi-VN/com_proofreader.ini</language>
+		<language tag="zh-CN">zh-CN/com_proofreader.ini</language>
+		<language tag="zh-TW">zh-TW/com_proofreader.ini</language>
+	</languages>
+
+
+	<administration>
+		<!-- img attribute for menu item is used in component dashboard -->
+		<menu img="../media/com_proofreader/images/proofreader_icon_16x.png">COM_PROOFREADER</menu>
+		<submenu>
+			<menu view="typos" link="option=com_proofreader&amp;view=typos">COM_PROOFREADER_MENU_TYPOS</menu>
+			<menu view="about" link="option=com_proofreader&amp;view=about">COM_PROOFREADER_MENU_ABOUT</menu>
+		</submenu>
+
+		<files folder="administrator">
+			<filename>access.xml</filename>
+			<filename>config.xml</filename>
+
+			<folder>forms</folder>
+			<folder>sql</folder>
+			<folder>services</folder>
+			<folder>src</folder>
+			<folder>tmpl</folder>
+		</files>
+
+		<languages folder="administrator/language">
+			<language tag="en-GB">en-GB/com_proofreader.ini</language>
+			<language tag="en-GB">en-GB/com_proofreader.sys.ini</language>
+			<language tag="en-GB">en-GB/plg_content_proofreader.ini</language>
+			<language tag="en-GB">en-GB/plg_content_proofreader.sys.ini</language>
+			<language tag="en-GB">en-GB/plg_quickicon_proofreader.ini</language>
+			<language tag="en-GB">en-GB/plg_quickicon_proofreader.sys.ini</language>
+			<language tag="en-GB">en-GB/plg_system_proofreader.ini</language>
+			<language tag="en-GB">en-GB/plg_system_proofreader.sys.ini</language>
+			<language tag="ru-RU">ru-RU/com_proofreader.ini</language>
+			<language tag="ru-RU">ru-RU/com_proofreader.sys.ini</language>
+			<language tag="ru-RU">ru-RU/plg_content_proofreader.ini</language>
+			<language tag="ru-RU">ru-RU/plg_content_proofreader.sys.ini</language>
+			<language tag="ru-RU">ru-RU/plg_quickicon_proofreader.ini</language>
+			<language tag="ru-RU">ru-RU/plg_quickicon_proofreader.sys.ini</language>
+			<language tag="ru-RU">ru-RU/plg_system_proofreader.ini</language>
+			<language tag="ru-RU">ru-RU/plg_system_proofreader.sys.ini</language>
+		</languages>
+	</administration>
+
+	<plugins>
+		<plugin plugin="proofreader" group="content" />
+		<plugin plugin="proofreader" group="system" />
+		<plugin plugin="proofreader" group="quickicon" />
+	</plugins>
+
+	<updateservers>
+		<server type="extension" priority="1" name="Proofreader Updates">
+			https://github.com/PavelSyomin/proofreader/raw/develop/proofreader_update.xml
+		</server>
+	</updateservers>
+</extension>
