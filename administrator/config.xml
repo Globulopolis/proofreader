@@ -2,85 +2,89 @@
 <config>
 	<fieldset name="basic" label="COM_PROOFREADER_CONFIGURATION_BASIC_FIELDSET_LABEL" description="">
 		<field
-				name="highlight"
-				type="radio"
-				class="btn-group btn-group-yesno"
-				label="COM_PROOFREADER_FIELD_HIGHLIGHT_LABEL"
-				description="COM_PROOFREADER_FIELD_HIGHLIGHT_DESC"
-				default="1">
-			<option value="1">JYES</option>
+			name="highlight"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_PROOFREADER_FIELD_HIGHLIGHT_LABEL"
+			description="COM_PROOFREADER_FIELD_HIGHLIGHT_DESC"
+			default="1">
 			<option value="0">JNO</option>
-		</field>
-		<field
-				name="prompt"
-				type="radio"
-				class="btn-group btn-group-yesno"
-				label="COM_PROOFREADER_FIELD_SHOW_PROMPT_LABEL"
-				description="COM_PROOFREADER_FIELD_SHOW_PROMPT_DESC"
-				default="1">
-			<option value="1">JSHOW</option>
-			<option value="0">JHIDE</option>
-		</field>
-		<field
-				name="notifications"
-				type="radio"
-				class="btn-group btn-group-yesno"
-				label="COM_PROOFREADER_FIELD_NOTIFICATIONS_LABEL"
-				description="COM_PROOFREADER_FIELD_NOTIFICATIONS_DESC"
-				default="0">
 			<option value="1">JYES</option>
-			<option value="0">JNO</option>
 		</field>
-		<field
-				name="editor"
-				type="user"
-				label="COM_PROOFREADER_FIELD_EDITOR_LABEL"
-				description="COM_PROOFREADER_FIELD_EDITOR_DESC"/>
 
 		<field
-				name="handler"
-				type="radio"
-				class="btn-group"
-				description="COM_PROOFREADER_FIELD_HANDLER_DESC"
-				label="COM_PROOFREADER_FIELD_HANDLER_LABEL"
-				default="keyboard">
+			name="prompt"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_PROOFREADER_FIELD_SHOW_PROMPT_LABEL"
+			description="COM_PROOFREADER_FIELD_SHOW_PROMPT_DESC"
+			default="1">
+			<option value="0">JHIDE</option>
+			<option value="1">JSHOW</option>
+		</field>
+
+		<field
+			name="notifications"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_PROOFREADER_FIELD_NOTIFICATIONS_LABEL"
+			description="COM_PROOFREADER_FIELD_NOTIFICATIONS_DESC"
+			default="0">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field
+			name="editor"
+			type="user"
+			label="COM_PROOFREADER_FIELD_EDITOR_LABEL"
+			description="COM_PROOFREADER_FIELD_EDITOR_DESC"/>
+
+		<field
+			name="handler"
+			type="radio"
+			class="btn-group"
+			description="COM_PROOFREADER_FIELD_HANDLER_DESC"
+			label="COM_PROOFREADER_FIELD_HANDLER_LABEL"
+			default="keyboard">
 			<option value="keyboard">COM_PROOFREADER_FIELD_HANDLER_VALUE_KEYBOARD</option>
 			<option value="mouse">COM_PROOFREADER_FIELD_HANDLER_VALUE_MOUSE</option>
 			<option value="both">COM_PROOFREADER_FIELD_HANDLER_VALUE_BOTH</option>
 		</field>
-
 	</fieldset>
 	<fieldset name="form" label="COM_PROOFREADER_CONFIGURATION_FORM_FIELDSET_LABEL" description="">
 		<field
-				name="comment"
-				type="radio"
-				class="btn-group btn-group-yesno"
-				label="COM_PROOFREADER_FIELD_COMMENT_LABEL"
-				description="COM_PROOFREADER_FIELD_COMMENT_DESC"
-				default="1">
-			<option value="1">JSHOW</option>
+			name="comment"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_PROOFREADER_FIELD_COMMENT_LABEL"
+			description="COM_PROOFREADER_FIELD_COMMENT_DESC"
+			default="1">
 			<option value="0">JHIDE</option>
+			<option value="1">JSHOW</option>
 		</field>
+
 		<field
-				name="captcha"
-				type="plugins"
-				folder="captcha"
-				filter="cmd"
-				label="COM_PROOFREADER_FIELD_CAPTCHA_LABEL"
-				description="COM_PROOFREADER_FIELD_CAPTCHA_DESC"
-				default="">
+			name="captcha"
+			type="plugins"
+			folder="captcha"
+			filter="cmd"
+			label="COM_PROOFREADER_FIELD_CAPTCHA_LABEL"
+			description="COM_PROOFREADER_FIELD_CAPTCHA_DESC"
+			default="">
 			<option value="">JOPTION_USE_DEFAULT</option>
 			<option value="0">JOPTION_DO_NOT_USE</option>
 		</field>
+
 		<field
-				name="dynamic_form_load"
-				type="radio"
-				class="btn-group btn-group-yesno"
-				label="COM_PROOFREADER_FIELD_DYNAMIC_FORM_LOAD_LABEL"
-				description="COM_PROOFREADER_FIELD_DYNAMIC_FORM_LOAD_DESC"
-				default="0">
-			<option value="1">JYES</option>
+			name="dynamic_form_load"
+			type="radio"
+			layout="joomla.form.field.radio.switcher"
+			label="COM_PROOFREADER_FIELD_DYNAMIC_FORM_LOAD_LABEL"
+			description="COM_PROOFREADER_FIELD_DYNAMIC_FORM_LOAD_DESC"
+			default="0">
 			<option value="0">JNO</option>
+			<option value="1">JYES</option>
 		</field>
 	</fieldset>
 	<fieldset name="advanced" label="COM_PROOFREADER_CONFIGURATION_ADVANCED_FIELDSET_LABEL" description="">
@@ -91,15 +95,16 @@
 				label="COM_PROOFREADER_FIELD_SELECTION_LIMIT_LABEL"
 				description="COM_PROOFREADER_FIELD_SELECTION_LIMIT_DESC"
 				default="100"/>
+
 		<field
 				name="disable_css"
 				type="radio"
-				class="btn-group btn-group-yesno"
+				layout="joomla.form.field.radio.switcher"
 				label="COM_PROOFREADER_FIELD_DISABLE_CSS_LABEL"
 				description="COM_PROOFREADER_FIELD_DISABLE_CSS_DESC"
 				default="0">
-			<option value="1">JYES</option>
 			<option value="0">JNO</option>
+			<option value="1">JYES</option>
 		</field>
 	</fieldset>
 	<fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL" description="JCONFIG_PERMISSIONS_DESC">

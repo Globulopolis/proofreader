@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fields name="filter">
+		<field
+			name="search"
+			type="text"
+			inputmode="search"
+			label="JSEARCH_FILTER_LABEL"
+			description=""
+			hint="JSEARCH_FILTER"
+		/>
+
+		<field
+				name="author_id"
+				type="sql"
+				label="JOPTION_SELECT_AUTHOR"
+				layout="joomla.form.field.list-fancy-select"
+				sql_select="p.created_by AS value, u.username AS name"
+				sql_from="#__proofreader_typos AS p"
+				sql_join="#__users AS u ON u.id = p.created_by"
+				sql_where="p.created_by != 0"
+				sql_order="u.username ASC"
+				key_field="value"
+				value_field="name"
+				sql_group="p.created_by"
+				hint="JOPTION_SELECT_AUTHOR"
+				onchange="this.form.submit();"
+		>
+			<option value="">JOPTION_SELECT_AUTHOR</option>
+		</field>
+
+		<field
+				name="language"
+				type="sql"
+				label="JGRID_HEADING_LANGUAGE"
+				class="form-select"
+				sql_select="p.page_language AS value, l.title AS name"
+				sql_from="#__proofreader_typos AS p"
+				sql_join="#__languages AS l ON l.lang_code = p.page_language"
+				sql_where="p.page_language != '*'"
+				sql_order="value ASC"
+				key_field="value"
+				value_field="name"
+				sql_group="value"
+				onchange="this.form.submit();"
+		>
+			<option value="">JOPTION_SELECT_LANGUAGE</option>
+			<option value="*">JALL</option>
+		</field>
+    </fields>
+
+    <fields name="list">
+		<field
+			name="fullordering"
+			type="list"
+			label="JGLOBAL_SORT_BY"
+			onchange="this.form.submit();"
+			default="p.created ASC"
+			validate="options"
+		>
+			<option value="p.created ASC">JDATE</option>
+			<option value="p.created DESC">JDATE</option>
+			<option value="p.created_by ASC">JAUTHOR</option>
+			<option value="p.created_by DESC">JAUTHOR</option>
+			<option value="p.page_language ASC">JGRID_HEADING_LANGUAGE_ASC</option>
+			<option value="p.page_language DESC">JGRID_HEADING_LANGUAGE_DESC</option>
+			<option value="p.id ASC">JGRID_HEADING_ID_ASC</option>
+			<option value="p.id DESC">JGRID_HEADING_ID_DESC</option>
+		</field>
+
+		<field
+			name="limit"
+			type="limitbox"
+			label="JGLOBAL_LIST_LIMIT"
+			default="25"
+			onchange="this.form.submit();"
+		/>
+	</fields>
+</form>
