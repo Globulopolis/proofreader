@@ -69,10 +69,9 @@
 			type="plugins"
 			folder="captcha"
 			filter="cmd"
+			useglobal="true"
 			label="COM_PROOFREADER_FIELD_CAPTCHA_LABEL"
-			description="COM_PROOFREADER_FIELD_CAPTCHA_DESC"
-			default="">
-			<option value="">JOPTION_USE_DEFAULT</option>
+			description="COM_PROOFREADER_FIELD_CAPTCHA_DESC">
 			<option value="0">JOPTION_DO_NOT_USE</option>
 		</field>
 
