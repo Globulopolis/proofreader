@@ -11,7 +11,7 @@
 			cols="50"
 			required="true"
 		/>
-		<field addfieldprefix="Joomla\Component\Proofreader\Site\Field"
+		<field
 			name="captcha"
 			type="captcha"
 			label="COM_PROOFREADER_FIELD_CAPTCHA_LABEL"
