@@ -11,99 +11,102 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
-jimport('joomla.filesystem.path');
-jimport('joomla.error.error');
+use Joomla\CMS\Factory;
+use Joomla\CMS\Installer\Installer;
+use Joomla\CMS\Language\Text;
+use Joomla\Filesystem\File;
 
 class com_proofreaderInstallerScript
 {
-    protected static $minimum_jversion = '2.5.14';
+	protected static $minVersion = '4.4.0';
 
-    function preflight($type, $parent)
-    {
-        if (!version_compare(JVERSION, self::$minimum_jversion, 'ge'))
-        {
-            JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_PROOFREADER_ERROR_UNSUPPORTED_JOOMLA_VERSION', self::$minimum_jversion), 'error');
+	public function preflight($type, $parent)
+	{
+		if (!version_compare(JVERSION, self::$minVersion, 'ge'))
+		{
+			Factory::getApplication()->enqueueMessage(Text::sprintf('COM_PROOFREADER_ERROR_UNSUPPORTED_JOOMLA_VERSION', self::$minVersion), 'error');
 
-            return false;
-        }
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    function postflight($type, $parent)
-    {
-        $db = JFactory::getDBO();
+	public function postflight($type, $parent)
+	{
+		/** @var \Joomla\Database\DatabaseDriver $db */
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
-        $src      = $parent->getParent()->getPath('source');
-        $manifest = $parent->getParent()->manifest;
-        $plugins  = $manifest->xpath('plugins/plugin');
+		$src      = $parent->getParent()->getPath('source');
+		$manifest = $parent->getParent()->manifest;
+		$plugins  = $manifest->xpath('plugins/plugin');
 
-        foreach ($plugins as $plugin)
-        {
-            $name  = (string) $plugin->attributes()->plugin;
-            $group = (string) $plugin->attributes()->group;
-            $path  = $src . '/plugins/' . $group;
+		foreach ($plugins as $plugin)
+		{
+			$name  = (string) $plugin->attributes()->plugin;
+			$group = (string) $plugin->attributes()->group;
+			$path  = $src . '/plugins/' . $group;
 
-            if (JFolder::exists($src . '/plugins/' . $group . '/' . $name))
-            {
-                $path = $src . '/plugins/' . $group . '/' . $name;
-            }
+			if (is_dir($src . '/plugins/' . $group . '/' . $name))
+			{
+				$path = $src . '/plugins/' . $group . '/' . $name;
+			}
 
-            $installer = new JInstaller;
-            $installer->install($path);
+			$installer = new Installer;
+			$installer->install($path);
 
-            $query = $db->getQuery(true);
-            $query->update($db->quoteName('#__extensions'));
-            $query->set($db->quoteName('enabled') . ' = 1');
-            $query->where($db->quoteName('type') . ' = ' . $db->Quote('plugin'));
-            $query->where($db->quoteName('element') . ' = ' . $db->Quote($name));
-            $query->where($db->quoteName('folder') . ' = ' . $db->Quote($group));
-            $db->setQuery($query);
-            $db->execute();
-        }
+			$query = $db->getQuery(true);
+			$query->update($db->quoteName('#__extensions'));
+			$query->set($db->quoteName('enabled') . ' = 1');
+			$query->where($db->quoteName('type') . ' = ' . $db->quote('plugin'));
+			$query->where($db->quoteName('element') . ' = ' . $db->quote($name));
+			$query->where($db->quoteName('folder') . ' = ' . $db->quote($group));
+			$db->setQuery($query);
+			$db->execute();
+		}
 
-        $deprecatedFiles = array(JPATH_SITE . '/components/com_proofreader/controllers/typo.raw.php');
-        foreach ($deprecatedFiles as $file)
-        {
-            if (is_file($file))
-            {
-                JFile::delete($file);
-            }
-        }
-    }
+		$deprecatedFiles = array(JPATH_SITE . '/components/com_proofreader/controllers/typo.raw.php');
 
-    function uninstall($parent)
-    {
-        $db = JFactory::getDBO();
+		foreach ($deprecatedFiles as $file)
+		{
+			if (is_file($file))
+			{
+				File::delete($file);
+			}
+		}
+	}
 
-        $manifest = $parent->getParent()->manifest;
-        $plugins  = $manifest->xpath('plugins/plugin');
+	public function uninstall($parent)
+	{
+		/** @var \Joomla\Database\DatabaseDriver $db */
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
-        foreach ($plugins as $plugin)
-        {
-            $name  = (string) $plugin->attributes()->plugin;
-            $group = (string) $plugin->attributes()->group;
+		$manifest = $parent->getParent()->manifest;
+		$plugins  = $manifest->xpath('plugins/plugin');
 
-            $query = $db->getQuery(true);
-            $query->select($db->quoteName('extension_id'));
-            $query->from($db->quoteName('#__extensions'));
-            $query->where($db->quoteName('type') . ' = ' . $db->Quote('plugin'));
-            $query->where($db->quoteName('element') . ' = ' . $db->Quote($name));
-            $query->where($db->quoteName('folder') . ' = ' . $db->Quote($group));
-            $db->setQuery($query);
+		foreach ($plugins as $plugin)
+		{
+			$name  = (string) $plugin->attributes()->plugin;
+			$group = (string) $plugin->attributes()->group;
 
-            $extensions = $db->loadColumn();
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName('extension_id'));
+			$query->from($db->quoteName('#__extensions'));
+			$query->where($db->quoteName('type') . ' = ' . $db->Quote('plugin'));
+			$query->where($db->quoteName('element') . ' = ' . $db->Quote($name));
+			$query->where($db->quoteName('folder') . ' = ' . $db->Quote($group));
+			$db->setQuery($query);
 
-            if (count($extensions))
-            {
-                foreach ($extensions as $id)
-                {
-                    $installer = new JInstaller;
-                    $installer->uninstall('plugin', $id);
-                }
-            }
-        }
-    }
+			$extensions = $db->loadColumn();
+
+			if (count($extensions))
+			{
+				foreach ($extensions as $id)
+				{
+					$installer = new Installer;
+					$installer->uninstall('plugin', $id);
+				}
+			}
+		}
+	}
 }
