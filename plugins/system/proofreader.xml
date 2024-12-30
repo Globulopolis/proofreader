@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="system" method="upgrade">
+<extension type="plugin" group="system" method="upgrade">
     <name>plg_system_proofreader</name>
     <creationDate>11/07/2015</creationDate>
     <author>Sergey M. Litvinov; Pavel Syomin</author>
     <authorEmail>pas.ntg@gmail.com</authorEmail>
     <copyright>Copyright 2005-2015 JoomlaTune.ru; Copyright 2022 Pavel Syomin All rights reserved!</copyright>
-    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <version>2.1.2</version>
+    <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <version>3.0.0</version>
     <description>PLG_SYSTEM_PROOFREADER_XML_DESCRIPTION</description>
-    <files>
-        <filename plugin="proofreader">proofreader.php</filename>
-    </files>
+	<namespace path="src">Joomla\Plugin\System\Proofreader</namespace>
+
+	<files>
+		<folder plugin="proofreader">services</folder>
+		<folder>src</folder>
+	</files>
 </extension>
