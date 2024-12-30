@@ -18,6 +18,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\Mail\Exception\MailDisabledException;
 use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\MVC\Model\FormModel;
@@ -182,16 +183,12 @@ class TypoModel extends FormModel
 
 					if ($result !== true)
 					{
-						$this->setError(Text::_('COM_PROOFREADER_ERROR_NOTIFICATION_SEND_MAIL_FAILED'));
-
-						return false;
+						Log::add(Text::_('COM_PROOFREADER_ERROR_NOTIFICATION_SEND_MAIL_FAILED'), Log::WARNING, 'com_proofreader');
 					}
 				}
 				catch (MailDisabledException | phpMailerException $e)
 				{
-					$this->setError($e->getMessage());
-
-					return false;
+					Log::add($e->getMessage(), Log::WARNING, 'com_proofreader');
 				}
 			}
 		}
