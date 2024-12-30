@@ -6,7 +6,7 @@
 	<authorEmail>pas.ntg@gmail.com</authorEmail>
 	<copyright>Copyright 2005-2015 JoomlaTune.ru; Copyright 2022 Pavel Syomin All rights reserved!</copyright>
 	<license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	<version>3.0</version>
+	<version>3.0.0</version>
 	<description>COM_PROOFREADER_XML_DESCRIPTION</description>
 	<namespace path="src">Joomla\Component\Proofreader</namespace>
 
