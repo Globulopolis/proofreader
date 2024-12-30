@@ -81,11 +81,6 @@ class TypoModel extends FormModel
 			$form->removeField('typo_comment');
 		}
 
-		if ($params->get('captcha') == '0')
-		{
-			$form->removeField('captcha');
-		}
-
 		return $form;
 	}
 
