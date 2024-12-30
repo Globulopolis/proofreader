@@ -10,6 +10,10 @@
  */
 
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Language\Text;
+
+extract($displayData);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -20,29 +24,29 @@ defined('_JEXEC') or die;
 </head>
 <body>
 <div style="margin: 0 0 10px 0;">
-	<?php echo JText::_('COM_PROOFREADER_NOTIFICATION_MESSAGE_PAGE'); ?>:
+	<?php echo Text::_('COM_PROOFREADER_NOTIFICATION_MESSAGE_PAGE'); ?>:
 </div>
 <div style="margin: 10px 0;">
-	<a href="<?php echo $displayData['page_url']; ?>" target="_blank"><?php echo $displayData['page_title']; ?></a>
+	<a href="<?php echo $page_url; ?>" target="_blank"><?php echo $page_title; ?></a>
 </div>
 <div style="margin: 10px 0;">
-	<?php echo JText::_('COM_PROOFREADER_NOTIFICATION_MESSAGE_TYPO'); ?>:
+	<?php echo Text::_('COM_PROOFREADER_NOTIFICATION_MESSAGE_TYPO'); ?>:
 </div>
 <div style="border: 1px solid #ccc; padding: 10px 5px; margin: 5px 0;">
-	<?php if (!empty($displayData['typo_prefix'])): ?>
-		<?php echo $displayData['typo_prefix']; ?>
+	<?php if (!empty($typo_prefix)): ?>
+		<?php echo $typo_prefix; ?>
 	<?php endif; ?>
-	<span style="color: #f00;"><?php echo $displayData['typo_text']; ?></span>
-	<?php if (!empty($displayData['typo_suffix'])): ?>
-		<?php echo $displayData['typo_suffix']; ?>
+	<span style="color: #f00;"><?php echo $typo_text; ?></span>
+	<?php if (!empty($typo_suffix)): ?>
+		<?php echo $typo_suffix; ?>
 	<?php endif; ?>
 </div>
-<?php if (!empty($displayData['typo_comment'])): ?>
+<?php if (!empty($typo_comment)): ?>
 	<div style="margin: 10px 0;">
-		<?php echo JText::_('COM_PROOFREADER_NOTIFICATION_MESSAGE_COMMENT'); ?>:
+		<?php echo Text::_('COM_PROOFREADER_NOTIFICATION_MESSAGE_COMMENT'); ?>:
 	</div>
 	<div style="border: 1px solid #ccc; padding: 10px 5px; margin: 5px 0;">
-		<?php echo $displayData['typo_comment']; ?>
+		<?php echo $typo_comment; ?>
 	</div>
 <?php endif; ?>
 </body>

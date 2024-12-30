@@ -10,39 +10,31 @@
  */
 
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+
+/** @var array $displayData */
+
+echo $displayData['event']->proofreaderFormBeforeDisplay;
+
+/** @note Use 'controller' var in form action URL because task=typo.save will throw 404 error when SEF is on. */
 ?>
-<form id="proofreader_form" action="<?php echo $displayData['action']; ?>" class="proofreader_form" method="post">
-    <h2 class="proofreader_form_header"><?php echo JText::_('COM_PROOFREADER_HEADER'); ?></h2>
+<form action="<?php echo Route::_('index.php?option=com_proofreader&controller=typo&task=save'); ?>" method="post"
+	  name="proofreaderForm" id="proofreaderForm" class="form-validate">
+	<?php
+	$proofreaderModalData = [
+		'selector' => 'proofreaderModal',
+		'params'   => [
+			'modalCss' => 'modal-dialog-centered modal-lg',
+			'title'    => Text::_('COM_PROOFREADER_HEADER'),
+			'footer'   => LayoutHelper::render('form-modal-footer', null, JPATH_SITE . '/components/com_proofreader/layouts')
+		],
+		'body' => LayoutHelper::render('form-modal-body', $displayData, JPATH_SITE . '/components/com_proofreader/layouts')
+	];
 
-    <div id="proofreader_messages_container"></div>
-    <div class="proofreader_form_body">
-        <div><?php echo JText::_('COM_PROOFREADER_FIELD_TYPO_LABEL'); ?></div>
-        <div id="proofreader_typo_container" class="proofreader_typo_container"></div>
-
-        <?php foreach ($displayData['form']->getFieldset('basic') as $field) : ?>
-            <div class="control-group">
-                <div class="control-label">
-                    <?php echo $field->label; ?>
-                </div>
-                <div class="controls">
-                    <?php echo $field->input; ?>
-                </div>
-            </div>
-        <?php endforeach; ?>
-
-        <div class="control-group">
-            <div class="controls">
-                <button type="submit" id="proofreader_submit" class="btn btn-primary">
-                    <i class="icon-ok"></i>
-                    <?php echo JText::_('JSUBMIT'); ?>
-                </button>
-            </div>
-        </div>
-        <div>
-            <?php foreach ($displayData['form']->getFieldset('hidden') as $field) : ?>
-                <?php echo $field->input; ?>
-            <?php endforeach; ?>
-            <?php echo JHtml::_('form.token'); ?>
-        </div>
-    </div>
+	echo LayoutHelper::render('libraries.html.bootstrap.modal.main', $proofreaderModalData);
+	?>
 </form>
+<?php echo $displayData['event']->proofreaderFormAfterDisplay;
