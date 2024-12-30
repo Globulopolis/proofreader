@@ -48,7 +48,7 @@ HTMLHelper::_('bootstrap.toast', '#proofreaderToast');
 			'highlightClass'     : 'mark',
 			<?php endif; ?>
 			'selectionMaxLength' : <?php echo $displayData['options']['selection_limit']; ?>,
-			'floatingButtonDelay': 4000000
+			'floatingButtonDelay': 4000
 		},
 		{
 			'reportTypo'           : Joomla.Text._('COM_PROOFREADER_BUTTON_REPORT_TYPO'),

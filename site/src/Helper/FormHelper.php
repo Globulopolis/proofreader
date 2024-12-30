@@ -206,19 +206,45 @@ class FormHelper
 		return LayoutHelper::render('form', $displayData, JPATH_SITE . '/components/com_proofreader/layouts');
 	}
 
+	/**
+	 * Attach captcha scripts to json response.
+	 *
+	 * NOTE! Not all captcha scripts can work properly due to different implementations.
+	 *
+	 * @return   array
+	 *
+	 * @throws  \Exception
+	 * @since   2.0
+	 */
 	public static function getFormScripts()
 	{
+		$app             = Factory::getApplication();
 		$data            = array();
 		$data['scripts'] = array();
 		$data['script']  = '';
 
-		// Some kind of magic to support reCAPTCHA if dynamic form load is activated
-		$headData    = Factory::getApplication()->getDocument()->getHeadData();
+		// Some kind of magic to support CAPTCHA if dynamic form load is activated
+		$headData    = $app->getDocument()->getHeadData();
 		$scriptsDiff = array_keys($headData['scripts']);
 		$scriptDiff  = array_values($headData['script']);
 
 		$callbackSuffix = md5(UserHelper::genRandomPassword(16));
 		$onloadCallback = 'onloadCallback_' . $callbackSuffix;
+
+		if (count($scriptsDiff) === 0)
+		{
+			// Support for reCaptcha plugin https://github.com/nikosdion/plg_captcha_google
+			if ($app->get('captcha') == 'google')
+			{
+				$scriptsDiff[] = $app->getDocument()->getWebAssetManager()->getAsset('script', 'plg_captcha_google.api')->getUri(false);
+				$scriptDiff[] = 'grecaptcha';
+			}
+			elseif ($app->get('captcha') == 'hcaptcha')
+			{
+				$scriptsDiff[] = $app->getDocument()->getWebAssetManager()->getAsset('script', 'plg_captcha_hcaptcha.api')->getUri(false);
+				$scriptDiff[] = 'hcaptcha';
+			}
+		}
 
 		foreach ($scriptsDiff as $script)
 		{
@@ -230,7 +256,14 @@ class FormHelper
 				}
 				elseif (StringHelper::strpos($script, 'api.js') !== false)
 				{
-					$data['scripts'][] = $script . '&onload=' . $onloadCallback;
+					if ($app->get('captcha') != 'google')
+					{
+						$data['scripts'][] = $script . '&onload=' . $onloadCallback;
+					}
+					else
+					{
+						$data['scripts'][] = $script;
+					}
 				}
 				else
 				{
@@ -254,6 +287,11 @@ class FormHelper
 
 				$scriptDiff[] = 'turnstile';
 			}
+			elseif (StringHelper::strpos($script, 'hcaptcha.com') !== false)
+			{
+				$data['scripts'][] = $script;
+				$scriptDiff[] = 'hcaptcha';
+			}
 		}
 
 		foreach ($scriptDiff as $script)
@@ -266,9 +304,13 @@ class FormHelper
 				{
 					$data['script'] .= $matches[1][0];
 				}
-				elseif (preg_match_all('/(grecaptcha.render[^;]+;)/ism', $script, $matches))
+				elseif (preg_match_all('/(grecaptcha.render[^;]+;)/ism', $script, $matches) && $app->get('captcha') != 'google')
 				{
 					$data['script'] .= 'var ' . $onloadCallback . ' = function() {' . $matches[1][0] . '};';
+				}
+				else
+				{
+					$data['script'] .= 'plg_captcha_google_init=()=>[].slice.call(document.getElementsByClassName("g-recaptcha")).forEach(a=>grecaptcha.execute(grecaptcha.render(a,a.dataset)));';
 				}
 			}
 			elseif (stripos($script, 'turnstile') !== false)
