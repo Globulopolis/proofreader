@@ -1,0 +1,30 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "com_proofreader",
+  "version": "3.0.0",
+  "description": "Proofreader",
+  "license": "GPL-2.0-or-later",
+  "assets": [
+    {
+      "name": "proofreader.style",
+      "type": "style",
+      "uri": "com_proofreader/style.min.css"
+    },
+    {
+      "name": "proofreader.style.rtl",
+      "type": "style",
+      "uri": "com_proofreader/style_rtl.min.css"
+    },
+    {
+      "name": "proofreader.core",
+      "type": "script",
+      "uri": "com_proofreader/jquery.proofreader.min.js",
+      "dependencies": [
+        "jquery",
+        "core",
+        "highlight"
+      ],
+      "version": "3.0.0"
+    }
+  ]
+}

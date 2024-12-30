@@ -25,6 +25,7 @@
 				'typoSuffixElementSelector': '#proofreader_typo_suffix',
 				'highlightClass'           : 'proofreader_highlight',
 				'messageErrorClass'        : 'proofreader_message_error',
+				'toastId'                  : 'proofreaderToast',
 				'overlayClass'             : 'proofreader_overlay',
 				'popupClass'               : 'proofreader_popup',
 				'popupCloseClass'          : 'proofreader_popup_close',
@@ -52,7 +53,7 @@
 			that.clearSelectionObject();
 
 			if ($container.find('form').length) {
-				$container.show();
+				//$container.show();
 				that.initForm();
 			}
 
@@ -66,40 +67,83 @@
 				that.addSelectionEvents();
 			}
 
-			that.wrapPopup($container, that.hideProofreader);
-			that.createMessagePopup();
+			//that.wrapPopup($container, that.hideProofreader);
+			//that.createMessagePopup();
 		};
 
 		that.initForm = function () {
 			that.$form = $container.find('form').first();
+
 			if (that.$form.length) {
-				that.$form
+				/*that.$form
 					.on('click', function (e) {
 						return that.isSubmitButtonClick(e);
 					})
 					.on('submit', function (e) {
 						that.submitForm();
 						return false;
-					});
+					});*/
 
 				that.$messagesContainer = $(pluginSettings.messagesContainerSelector);
 				that.$typoContainer = $(pluginSettings.typoContainerSelector);
 				that.$typoTextElement = $(pluginSettings.typoTextElementSelector);
 				that.$typoPrefixElement = $(pluginSettings.typoPrefixElementSelector);
 				that.$typoSuffixElement = $(pluginSettings.typoSuffixElementSelector);
-				that.$submitButton = that.$form.find('button[type="submit"],input[type="submit"]').first();
+				that.$closeButton = $('#proofreaderModal .modal-footer').find('button[data-bs-dismiss]');
+				that.$submitButton = $('#proofreaderModal .modal-footer').find('button[type="submit"]');
+
+				that.$submitButton.on('click', function (e) {
+					e.preventDefault();
+					that.submitForm();
+				});
+
+				document.getElementById('proofreaderModal').addEventListener('hidden.bs.modal', event => {
+					that.hideProofreader();
+				});
 
 				that.initialized = true;
 			}
 		};
 
 		that.loadForm = function (callback) {
-			var url = pluginSettings.loadFormUrl,
-				data = {
-					'page_url'  : window.location.href,
+			Joomla.request({
+				url: pluginSettings.loadFormUrl,
+				data: {
+					'page_url'  : encodeURI(window.location.href),
 					'page_title': $(document).find('title').text()
-				};
-			$.ajax({
+				},
+				onSuccess: (response) => {
+					const _response = JSON.parse(response);
+
+					if (!_response.success) {
+						that.showMessage(_response.message, 'danger');
+					} else {
+						if (that.isValidFormResponse(_response.data.form)) {
+							that.replaceForm(_response.data.form);
+							that.injectScripts(_response.data.scripts, _response.data.script).done(function () {
+								if (callback !== undefined) {
+									callback();
+								}
+							});
+						} else {
+							that.hideProofreader();
+						}
+					}
+				},
+				onError: (xhr) => {
+					try {
+						const response = JSON.parse(xhr.response);
+
+						that.showMessage(response.message, 'danger');
+					} catch (e) {
+						that.showMessage(xhr.statusText, 'danger');
+					}
+				},
+				onComplete: (xhr) => {
+					that.$submitButton.removeAttr('disabled');
+				}
+			});
+			/*$.ajax({
 				'type'    : 'GET',
 				'url'     : url,
 				'dataType': 'json',
@@ -119,7 +163,7 @@
 				'error': function () {
 					that.hideProofreader();
 				}
-			});
+			});*/
 		};
 
 		that.addKeyboardEvents = function () {
@@ -133,9 +177,12 @@
 				})
 				.keydown(function (e) {
 					if (e.which === 27) {
+						const pToastEl = document.getElementById(pluginSettings.toastId);
+						const pToast = bootstrap.Toast.getInstance(pToastEl);
+
 						if ($container.is(':visible')) {
 							that.hideProofreader();
-						} else if (that.$messagePopup.is(':visible')) {
+						} else if (pToast.isShown()) {
 							that.resetMessagePopup();
 						}
 
@@ -215,13 +262,20 @@
 		};
 
 		that.canShowProofreader = function () {
-			return !(that.selectionObject.text === '' || $container.is(':visible') || that.$messagePopup.is(':visible'));
+			const pToastEl = document.getElementById(pluginSettings.toastId);
+			const pToast = bootstrap.Toast.getInstance(pToastEl);
+
+			return !(that.selectionObject.text === '' || $container.is(':visible') || pToast.isShown());
 		};
 
 		that.showProofreader = function () {
 			if (that.canShowProofreader()) {
 				if (that.selectionObject.text.length > pluginSettings.selectionMaxLength) {
-					that.showMessage(l10n.selectionIsTooLarge, pluginSettings.popupMessageErrorClass);
+					if ($container.is(':visible')) {
+						that.showMessage(l10n.selectionIsTooLarge, pluginSettings.popupMessageErrorClass);
+					} else {
+						that.showMessage(l10n.selectionIsTooLarge, pluginSettings.popupMessageErrorClass, true);
+					}
 
 					return;
 				}
@@ -234,18 +288,15 @@
 					return;
 				}
 
-				$container
-					.parent()
-					.show();
+				$container.show();
 			}
 		};
 
 		that.hideProofreader = function () {
 			that.clearSelectionObject();
+			that.updateFormHiddenFields();
 
-			$container
-				.parent()
-				.hide();
+			$container.hide();
 		};
 
 		that.showForm = function () {
@@ -259,21 +310,67 @@
 					that.$submitButton.removeAttr('disabled');
 				}
 			}
+
+			const modal = new bootstrap.Modal('#proofreaderModal');
+			const modalToggle = document.getElementById('proofreaderModal');
+			modal.show(modalToggle);
 		};
 
 		that.submitForm = function () {
-			var formData = that.$form.serialize(),
-				typoText = that.selectionObject.text,
-				$selectionNode = $(that.selectionObject.node);
-			that.removeFormMessages();
-			that.$submitButton.attr('disabled', 'disabled');
+			if (!document.formvalidator.isValid(document.getElementById('proofreaderForm'))) {
+				that.showMessage(Joomla.Text._('JLIB_FORM_CONTAINS_INVALID_FIELDS'), 'danger');
 
-			$.ajax({
-				'type'    : 'POST',
-				'url'     : that.$form.attr('action'),
-				'dataType': 'json',
-				'data'    : formData,
-				'success' : function (data) {
+				return false;
+			}
+
+			Joomla.request({
+				url: that.$form.attr('action'),
+				method: 'POST',
+				data: that.$form.serialize(),
+				onBefore: (xhr) => {
+					that.removeMessage();
+					that.$submitButton.attr('disabled', 'disabled');
+				},
+				onSuccess: (response) => {
+					const _response = JSON.parse(response);
+
+					if (!_response.success) {
+						that.showMessage(_response.message, 'danger');
+					} else {
+						if (pluginSettings.highlightTypos) {
+							that.highlightTypo($('.proofreader_highlight'), that.$form.find('#proofreader_typo_text').val());
+						}
+
+						that.showMessage(l10n.thankYou, 'success');
+						that.clearSelectionObject();
+						that.$form.find('#proofreader_typo_comment').val('');
+						that.$form.find('#proofreader_typo_text').val('');
+						that.$form.find('#proofreader_typo_prefix').val('');
+						that.$form.find('#proofreader_typo_suffix').val('');
+					}
+				},
+				onError: (xhr) => {
+					that.$closeButton.trigger('click');
+
+					try {
+						const response = JSON.parse(xhr.response);
+
+						that.showMessage(response.message, 'danger', true);
+					} catch (e) {
+						that.showMessage(xhr.statusText, 'danger', true);
+					}
+				},
+				onComplete: (xhr) => {
+					that.$submitButton.removeAttr('disabled');
+				}
+			});
+
+			/*$.ajax({
+				'type'     : 'POST',
+				'url'      : that.$form.attr('action'),
+				'dataType' : 'json',
+				'data'     : that.$form.serialize(),
+				'success'  : function (data) {
 					if (data.error) {
 						that.$submitButton.removeAttr('disabled');
 						that.renderFormMessages(data.messages);
@@ -289,10 +386,10 @@
 						that.showMessage(l10n.thankYou, pluginSettings.popupMessageSuccessClass);
 					}
 				},
-				'error'   : function () {
-					that.hideProofreader();
+				'error'    : function () {
+					//that.hideProofreader();
 				}
-			});
+			});*/
 		};
 
 		that.replaceForm = function (form) {
@@ -340,7 +437,7 @@
 				.prepend($closeButton);
 		};
 
-		that.createMessagePopup = function () {
+		/*that.createMessagePopup = function () {
 			if (that.$messagePopup === undefined) {
 				var $textContainer = $('<div>', {
 					'class': pluginSettings.popupMessageClass
@@ -357,16 +454,20 @@
 			}
 
 			that.wrapPopup(that.$messagePopup, that.resetMessagePopup);
-		};
+		};*/
 
 		that.resetMessagePopup = function () {
-			clearInterval(that.messagePopupTimer);
+			/*clearInterval(that.messagePopupTimer);
 			that.$messagePopup
 				.parent()
 				.hide()
 				.find('.' + pluginSettings.popupMessageClass)
 				.attr('class', pluginSettings.popupMessageClass)
-				.html('');
+				.html('');*/
+
+			const pToastEl = document.getElementById(pluginSettings.toastId);
+			const pToast = bootstrap.Toast.getInstance(pToastEl);
+			pToast.hide();
 		};
 
 		that.createFloatingButton = function (e) {
@@ -382,6 +483,7 @@
 				})
 				.on('mouseup', function (e) {
 					that.showProofreader();
+					that.renderFormTypoContainer();
 					$(this).remove();
 
 					return false;
@@ -430,9 +532,9 @@
 				}
 
 				that.$typoContainer
-					.append($('<span>', {
-						'text' : that.selectionObject.text,
-						'class': pluginSettings.highlightClass
+					.append($('<mark>', {
+						'text': that.selectionObject.text,
+						'data-markjs': true
 					}));
 
 				if (that.selectionObject.suffix !== '') {
@@ -458,11 +560,24 @@
 		};
 
 		that.removeFormMessages = function () {
-			if (that.initialized && that.$messagesContainer.length) {
-				that.$messagesContainer.html('');
+			const alertDiv = that.$messagesContainer.find('div.alert');
+
+			if (that.initialized && alertDiv.length) {
+				const alert = bootstrap.Alert.getOrCreateInstance(alertDiv);
+				alert.close();
 			}
 		};
 
+		/**
+		 * Highlight a typo.
+		 *
+		 * @param   object  $node     jQuery node object.
+		 * @param   string  typoText  Text to highlight.
+		 *
+		 * @return  void
+		 *
+		 * @since   2.0
+		 */
 		that.highlightTypo = function ($node, typoText) {
 			var parts,
 				text,
@@ -471,7 +586,8 @@
 
 			if (typoText !== ''
 				&& $node.length
-				&& $node.prop('tagName').toLowerCase() !== 'body') {
+				&& $node.prop('tagName').toLowerCase() !== 'body'
+			) {
 				parts = typoText.split(' ');
 				$.each(parts, function (index, text) {
 					pattern = pattern
@@ -481,37 +597,80 @@
 					replacement = replacement
 						+ '$' + (index * 4 + 1)
 						+ '$' + (index * 4 + 2)
-						+ '<span class="' + pluginSettings.highlightClass + '">'
+						+ '<mark data-markjs="true">'
 						+ '$' + (index * 4 + 3)
-						+ '</span>'
+						+ '</mark>'
 						+ '$' + (index * 4 + 4);
 				});
 
 				text = $node
 					.html()
 					.replace(new RegExp(pattern, 'g'), replacement);
+
 				if (text !== '') {
 					$node.html(text);
 				}
 			}
 		};
 
-		that.showMessage = function (text, messageClass) {
+		that.showMessage = function (text, type, toast) {
 			that.resetMessagePopup();
+			that.removeMessage();
 			that.removeFloatingButton();
 
-			that.$messagePopup
-				.parent()
-				.show()
-				.find('.' + pluginSettings.popupClass)
-				.addClass(messageClass)
-				.find('.' + pluginSettings.popupMessageClass)
-				.text(text);
+			if (toast) {
+				const pToastEl = document.getElementById(pluginSettings.toastId);
+				const pToast = bootstrap.Toast.getInstance(pToastEl);
+				$(pToastEl).find('.toast-body').text(text);
+				pToast.show();
+			} else {
+				const alertPlaceholder = document.getElementById('proofreader_messages_container');
+				let icon = '', textMargin = 'ms-3';
 
-			that.messagePopupTimer = setTimeout(function () {
-				that.resetMessagePopup();
-			}, pluginSettings.popupDelay);
+				if (type === 'danger') {
+					icon = '<span class="icon icon-cancel-circle"></span>';
+				} else if (type === 'warning') {
+					icon = '<span class="icon exclamation-triangle"></span>';
+				} else {
+					textMargin = '';
+				}
+
+				if (!$('#proofreader_messages_container .alert').is(':visible')) {
+					const wrapper = document.createElement('div');
+					wrapper.innerHTML = [
+						'<div class="alert alert-' + type + ' alert-dismissible d-flex align-items-center" role="alert">',
+						icon + '   <div class="' + textMargin + '">' + text + '</div>',
+						'   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+						'</div>'
+					].join('');
+
+					// Something went wrong while request ajax-form.
+					if (alertPlaceholder) {
+						alertPlaceholder.append(wrapper);
+					} else {
+						that.showMessage(text, type, true);
+					}
+				}
+			}
 		};
+
+		that.removeMessage = function (container) {
+			let messageContainer;
+
+			if (container instanceof HTMLElement) {
+				messageContainer = container;
+			} else {
+				if (typeof container === 'undefined' || container && container === '#proofreader_messages_container') {
+					messageContainer = document.getElementById('proofreader_messages_container');
+				} else {
+					messageContainer = document.querySelector(container);
+				}
+			}
+
+			if (messageContainer && messageContainer.querySelectorAll(':scope div').length) {
+				that.removeFormMessages();
+			}
+		}
 
 		that.createSelectionObject = function (text, prefix, suffix, node) {
 			return {
@@ -536,6 +695,10 @@
 			} else {
 				that.clearSelectionObject();
 				that.showMessage(l10n.browserIsNotSupported, pluginSettings.popupMessageErrorClass);
+			}
+
+			if (that.selectionObject.text === '') {
+				that.clearSelectionObject();
 			}
 		};
 
