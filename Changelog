@@ -1,3 +1,6 @@
+3.0.0 - December 30, 2024
+Add compatibility with Joomla 5
+
 2.1.0 - June 14, 2022
 Add basic compatibility with Joomla 4:
   - modify SQL:
