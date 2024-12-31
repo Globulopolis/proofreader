@@ -37,24 +37,11 @@ class Router extends RouterBase
 
 		if (isset($query['task']))
 		{
-			switch ($query['task'])
-			{
-				case 'typo.submit':
-					$segments[] = 'submit';
-					break;
-
-				case 'typo.form':
-					$segments[] = 'form';
-					break;
-
-				default:
-					$segments[] = $query['task'];
-					break;
-			}
-
+			$segments[] = $query['task'];
 			unset($query['task']);
 		}
 
+		// Required! Formats other than html will lead to error in FormHelper::getFormScripts()
 		if (isset($query['format']))
 		{
 			unset($query['format']);
@@ -78,22 +65,12 @@ class Router extends RouterBase
 
 		if (count($segments))
 		{
-			switch ($segments[0])
+			$segment = array_shift($segments);
+
+			if (!is_numeric($segment))
 			{
-				case 'submit':
-					$vars['task']   = 'typo.submit';
-					break;
-
-				case 'form':
-					$vars['task']   = 'typo.form';
-					break;
-
-				default:
-					$vars['task'] = $segments[0];
-					break;
+				$vars['task'] = $segment;
 			}
-
-			unset($segments[0]);
 		}
 
 		return $vars;
