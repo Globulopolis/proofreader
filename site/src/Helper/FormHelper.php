@@ -83,7 +83,7 @@ class FormHelper
 
 		if ($dynamicFormLoad)
 		{
-			$displayData['options']['load_form_url'] = Route::_('index.php?option=com_proofreader&controller=typo&task=form&' . Session::getFormToken() . '=1&format=json', false);
+			$displayData['options']['load_form_url'] = Route::_('index.php?option=com_proofreader&task=typo.form&' . Session::getFormToken() . '=1', false);
 		}
 
 		Text::script('COM_PROOFREADER_BUTTON_REPORT_TYPO', true);
@@ -219,12 +219,15 @@ class FormHelper
 	public static function getFormScripts()
 	{
 		$app             = Factory::getApplication();
+
+		/** @var \Joomla\CMS\Document\Document $document */
+		$document        = $app->getDocument();
 		$data            = array();
 		$data['scripts'] = array();
 		$data['script']  = '';
 
 		// Some kind of magic to support CAPTCHA if dynamic form load is activated
-		$headData    = $app->getDocument()->getHeadData();
+		$headData    = $document->getHeadData();
 		$scriptsDiff = array_keys($headData['scripts']);
 		$scriptDiff  = array_values($headData['script']);
 

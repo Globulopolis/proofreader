@@ -21,7 +21,7 @@ echo $displayData['event']->proofreaderFormBeforeDisplay;
 
 /** @note Use 'controller' var in form action URL because task=typo.save will throw 404 error when SEF is on. */
 ?>
-<form action="<?php echo Route::_('index.php?option=com_proofreader&controller=typo&task=save'); ?>" method="post"
+<form action="<?php echo Route::_('index.php?option=com_proofreader&task=typo.save'); ?>" method="post"
 	  name="proofreaderForm" id="proofreaderForm" class="form-validate">
 	<?php
 	$proofreaderModalData = [
