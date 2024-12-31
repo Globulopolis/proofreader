@@ -8,16 +8,6 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-.proofreader_message_error {
-	margin: 2px 0;
-	padding: 8px;
-	border: 1px solid #fbeed5;
-	border-radius: 4px;
-	color: #f00;
-	background-color: #fcf8e3;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
 .proofreader_comment {
 	width: 100%;
 	-moz-box-sizing: border-box;
@@ -42,14 +32,4 @@
 
 .proofreader_mouse:hover {
 	cursor: pointer;
-}
-
-.proofreader_popup_message {
-	display: table-cell;
-	padding-left: 42px;
-	width: 558px;
-	height: 2.2em;
-	vertical-align: middle;
-	text-align: left;
-	font-size: 16px;
 }
