@@ -29,10 +29,12 @@ HTMLHelper::_('bootstrap.toast', '#proofreaderToast');
 ?>
 <div id="proofreader_container" style="display: none;"><?php echo $displayData['form']; ?></div>
 <div aria-live="polite" aria-atomic="true" class="d-flex position-absolute w-100 top-50">
-	<div class="toast position-relative top-50 start-50 translate-middle" id="proofreaderToast" role="alert" aria-live="assertive" aria-atomic="true">
-		<div class="d-flex bg-danger-subtle">
+	<div class="toast position-relative top-50 start-50 translate-middle" id="proofreaderToast" role="alert"
+		 aria-live="assertive" aria-atomic="true">
+		<div class="d-flex">
 			<div class="toast-body"><?php echo Text::_('ERROR'); ?></div>
-			<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="<?php echo Text::_('JCLOSE'); ?>"></button>
+			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+					aria-label="<?php echo Text::_('JCLOSE'); ?>"></button>
 		</div>
 	</div>
 </div>
