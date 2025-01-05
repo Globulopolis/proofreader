@@ -1,3 +1,4 @@
+//phpcs:disable
 /**
  * Proofreader
  *
@@ -10,7 +11,7 @@
 
 (function ($) {
 	$.fn.proofreader = function (options, messages) {
-		var $container = this,
+		let $container = this,
 			that = {
 				initialized    : false,
 				selectionObject: {},
@@ -25,14 +26,8 @@
 				'typoSuffixElementSelector': '#proofreader_typo_suffix',
 				'highlightClass'           : 'proofreader_highlight',
 				'messageErrorClass'        : 'proofreader_message_error',
-				'toastId'                  : 'proofreaderToast',
-				'overlayClass'             : 'proofreader_overlay',
-				'popupClass'               : 'proofreader_popup',
-				'popupCloseClass'          : 'proofreader_popup_close',
-				'popupMessageClass'        : 'proofreader_popup_message',
 				'popupMessageErrorClass'   : 'proofreader_popup_message_error',
 				'popupMessageSuccessClass' : 'proofreader_popup_message_success',
-				'popupDelay'               : 4000,
 				'floatingButtonClass'      : 'proofreader_mouse',
 				'floatingButtonOffset'     : 15,
 				'floatingButtonDelay'      : 2000,
@@ -53,7 +48,6 @@
 			that.clearSelectionObject();
 
 			if ($container.find('form').length) {
-				//$container.show();
 				that.initForm();
 			}
 
@@ -66,9 +60,6 @@
 				|| pluginSettings.handlerType === 'both') {
 				that.addSelectionEvents();
 			}
-
-			//that.wrapPopup($container, that.hideProofreader);
-			//that.createMessagePopup();
 		};
 
 		that.initForm = function () {
@@ -89,15 +80,21 @@
 				that.$typoTextElement = $(pluginSettings.typoTextElementSelector);
 				that.$typoPrefixElement = $(pluginSettings.typoPrefixElementSelector);
 				that.$typoSuffixElement = $(pluginSettings.typoSuffixElementSelector);
-				that.$closeButton = $('#proofreaderModal .modal-footer').find('button[data-bs-dismiss]');
-				that.$submitButton = $('#proofreaderModal .modal-footer').find('button[type="submit"]');
+
+				const $modal = $('#proofreaderModal .modal-footer');
+				that.$closeButton = $modal.find('button[data-bs-dismiss]');
+				that.$submitButton = $modal.find('button[type="submit"]');
 
 				that.$submitButton.on('click', function (e) {
 					e.preventDefault();
 					that.submitForm();
 				});
+				that.$form.on('submit', function (e) {
+					e.preventDefault();
+					that.submitForm();
+				});
 
-				document.getElementById('proofreaderModal').addEventListener('hidden.bs.modal', event => {
+				document.getElementById('proofreaderModal').addEventListener('hidden.bs.modal', function() {
 					that.hideProofreader();
 				});
 
@@ -113,61 +110,46 @@
 					'page_title': $(document).find('title').text()
 				},
 				onSuccess: (response) => {
-					const _response = JSON.parse(response);
+					try {
+						const _response = JSON.parse(response);
 
-					if (!_response.success) {
-						that.showMessage(_response.message, 'danger');
-					} else {
-						if (that.isValidFormResponse(_response.data.form)) {
-							that.replaceForm(_response.data.form);
-							that.injectScripts(_response.data.scripts, _response.data.script).done(function () {
-								if (callback !== undefined) {
-									callback();
-								}
-							});
+						if (!_response.success) {
+							that.showMessage(_response.message, 'danger', true);
 						} else {
-							that.hideProofreader();
+							if (that.isValidFormResponse(_response.data.form)) {
+								that.replaceForm(_response.data.form);
+								that.injectScripts(_response.data.scripts, _response.data.script).done(function () {
+									if (callback !== undefined) {
+										callback();
+									}
+								});
+							} else {
+								that.hideProofreader();
+							}
 						}
+					} catch (e) {
+						that.showMessage(e, 'danger', true);
+
+						return false;
 					}
 				},
 				onError: (xhr) => {
 					try {
 						const response = JSON.parse(xhr.response);
 
-						that.showMessage(response.message, 'danger');
+						that.showMessage(response.message, 'danger', true);
 					} catch (e) {
-						that.showMessage(xhr.statusText, 'danger');
+						that.showMessage(xhr.statusText, 'danger', true);
 					}
 				},
-				onComplete: (xhr) => {
+				onComplete: () => {
 					that.$submitButton.removeAttr('disabled');
 				}
 			});
-			/*$.ajax({
-				'type'    : 'GET',
-				'url'     : url,
-				'dataType': 'json',
-				'data'    : data,
-				'success' : function (data) {
-					if (that.isValidFormResponse(data.form)) {
-						that.replaceForm(data.form);
-						that.injectScripts(data.scripts, data.script).done(function () {
-							if (callback !== undefined) {
-								callback();
-							}
-						});
-					} else {
-						that.hideProofreader();
-					}
-				},
-				'error': function () {
-					that.hideProofreader();
-				}
-			});*/
 		};
 
 		that.addKeyboardEvents = function () {
-			var isCtrl = false;
+			let isCtrl = false;
 
 			$(document)
 				.keyup(function (e) {
@@ -177,7 +159,7 @@
 				})
 				.keydown(function (e) {
 					if (e.which === 27) {
-						const pToastEl = document.getElementById(pluginSettings.toastId);
+						const pToastEl = document.getElementById('proofreaderToast');
 						const pToast = bootstrap.Toast.getInstance(pToastEl);
 
 						if ($container.is(':visible')) {
@@ -226,8 +208,9 @@
 		};
 
 		that.injectScripts = function (scripts, script) {
-			var requests = [],
+			let requests = [],
 				d = $.Deferred();
+
 			if (scripts) {
 				$.each(scripts, function (index, src) {
 					if ($.inArray(src, that.scripts) === -1 && !$('script[src="' + src + '"]').length) {
@@ -262,7 +245,7 @@
 		};
 
 		that.canShowProofreader = function () {
-			const pToastEl = document.getElementById(pluginSettings.toastId);
+			const pToastEl = document.getElementById('proofreaderToast');
 			const pToast = bootstrap.Toast.getInstance(pToastEl);
 
 			return !(that.selectionObject.text === '' || $container.is(':visible') || pToast.isShown());
@@ -327,7 +310,7 @@
 				url: that.$form.attr('action'),
 				method: 'POST',
 				data: that.$form.serialize(),
-				onBefore: (xhr) => {
+				onBefore: () => {
 					that.removeMessage();
 					that.$submitButton.attr('disabled', 'disabled');
 				},
@@ -337,16 +320,19 @@
 					if (!_response.success) {
 						that.showMessage(_response.message, 'danger');
 					} else {
+						that.$closeButton.trigger('click');
+
+						if (that.isValidFormResponse(_response.data.form)) {
+							that.replaceForm(_response.data.form);
+							that.injectScripts(_response.data.scripts, _response.data.script);
+						}
+
 						if (pluginSettings.highlightTypos) {
 							that.highlightTypo($('.proofreader_highlight'), that.$form.find('#proofreader_typo_text').val());
 						}
 
-						that.showMessage(l10n.thankYou, 'success');
+						that.showMessage(l10n.thankYou, 'success', true);
 						that.clearSelectionObject();
-						that.$form.find('#proofreader_typo_comment').val('');
-						that.$form.find('#proofreader_typo_text').val('');
-						that.$form.find('#proofreader_typo_prefix').val('');
-						that.$form.find('#proofreader_typo_suffix').val('');
 					}
 				},
 				onError: (xhr) => {
@@ -360,36 +346,10 @@
 						that.showMessage(xhr.statusText, 'danger', true);
 					}
 				},
-				onComplete: (xhr) => {
+				onComplete: () => {
 					that.$submitButton.removeAttr('disabled');
 				}
 			});
-
-			/*$.ajax({
-				'type'     : 'POST',
-				'url'      : that.$form.attr('action'),
-				'dataType' : 'json',
-				'data'     : that.$form.serialize(),
-				'success'  : function (data) {
-					if (data.error) {
-						that.$submitButton.removeAttr('disabled');
-						that.renderFormMessages(data.messages);
-					} else {
-						that.hideProofreader();
-						if (that.isValidFormResponse(data.form)) {
-							that.replaceForm(data.form);
-							that.injectScripts(data.scripts, data.script);
-						}
-						if (pluginSettings.highlightTypos) {
-							that.highlightTypo($selectionNode, typoText);
-						}
-						that.showMessage(l10n.thankYou, pluginSettings.popupMessageSuccessClass);
-					}
-				},
-				'error'    : function () {
-					//that.hideProofreader();
-				}
-			});*/
 		};
 
 		that.replaceForm = function (form) {
@@ -415,63 +375,15 @@
 			return $(e.target).attr('type') === 'submit';
 		};
 
-		that.wrapPopup = function ($element, resetFunction) {
-			var $overlay = $('<div>', {
-					'class': pluginSettings.overlayClass
-				})
-				.on('click', function (e) {
-					if (!that.isSubmitButtonClick(e)) {
-						$(this).hide();
-						resetFunction();
-					}
-
-					return true;
-				}),
-				$closeButton = $('<div>', {
-					'class': pluginSettings.popupCloseClass
-				})
-				.on('click', resetFunction);
-
-			$element
-				.wrap($overlay)
-				.prepend($closeButton);
-		};
-
-		/*that.createMessagePopup = function () {
-			if (that.$messagePopup === undefined) {
-				var $textContainer = $('<div>', {
-					'class': pluginSettings.popupMessageClass
-				});
-
-				that.$messagePopup = $('<div>', {
-						'class': pluginSettings.popupClass
-					})
-					.on('click', function () {
-						return false;
-					})
-					.append($textContainer)
-					.appendTo($('body'));
-			}
-
-			that.wrapPopup(that.$messagePopup, that.resetMessagePopup);
-		};*/
-
 		that.resetMessagePopup = function () {
-			/*clearInterval(that.messagePopupTimer);
-			that.$messagePopup
-				.parent()
-				.hide()
-				.find('.' + pluginSettings.popupMessageClass)
-				.attr('class', pluginSettings.popupMessageClass)
-				.html('');*/
-
-			const pToastEl = document.getElementById(pluginSettings.toastId);
+			const pToastEl = document.getElementById('proofreaderToast');
 			const pToast = bootstrap.Toast.getInstance(pToastEl);
 			pToast.hide();
 		};
 
 		that.createFloatingButton = function (e) {
-			var mousePos = that.getMousePosition(e);
+			const mousePos = that.getMousePosition(e);
+
 			that.$floatingButton = $('<div>', {
 					'text' : l10n.reportTypo,
 					'class': pluginSettings.floatingButtonClass
@@ -481,7 +393,7 @@
 					'top'     : mousePos.y + pluginSettings.floatingButtonOffset + 'px',
 					'left'    : mousePos.x + pluginSettings.floatingButtonOffset + 'px'
 				})
-				.on('mouseup', function (e) {
+				.on('mouseup', function () {
 					that.showProofreader();
 					that.renderFormTypoContainer();
 					$(this).remove();
@@ -571,15 +483,15 @@
 		/**
 		 * Highlight a typo.
 		 *
-		 * @param   object  $node     jQuery node object.
-		 * @param   string  typoText  Text to highlight.
+		 * @param   {object}  $node     jQuery node object.
+		 * @param   {string}  typoText  Text to highlight.
 		 *
 		 * @return  void
 		 *
 		 * @since   2.0
 		 */
 		that.highlightTypo = function ($node, typoText) {
-			var parts,
+			let parts,
 				text,
 				pattern = '',
 				replacement = '';
@@ -619,7 +531,16 @@
 			that.removeFloatingButton();
 
 			if (toast) {
-				const pToastEl = document.getElementById(pluginSettings.toastId);
+				const pToastEl = document.getElementById('proofreaderToast');
+
+				if (type === 'success') {
+					pToastEl.classList.remove('text-bg-danger');
+					pToastEl.classList.add('text-bg-success');
+				} else if (type === 'danger') {
+					pToastEl.classList.remove('text-bg-success');
+					pToastEl.classList.add('text-bg-danger');
+				}
+
 				const pToast = bootstrap.Toast.getInstance(pToastEl);
 				$(pToastEl).find('.toast-body').text(text);
 				pToast.show();
@@ -694,7 +615,7 @@
 				that.selectionObject = that.getTridentSelection();
 			} else {
 				that.clearSelectionObject();
-				that.showMessage(l10n.browserIsNotSupported, pluginSettings.popupMessageErrorClass);
+				that.showMessage(l10n.browserIsNotSupported, pluginSettings.popupMessageErrorClass, true);
 			}
 
 			if (that.selectionObject.text === '') {
@@ -703,7 +624,7 @@
 		};
 
 		that.getRangeText = function (range) {
-			var fragment = range.cloneContents(),
+			let fragment = range.cloneContents(),
 				div = document.createElement('div'),
 				$skipElements,
 				length;
@@ -735,7 +656,7 @@
 		};
 
 		that.getWebKitSelection = function () {
-			var selection = window.getSelection(),
+			let selection = window.getSelection(),
 				text = '',
 				prefix = '',
 				suffix = '',
@@ -765,14 +686,14 @@
 		};
 
 		that.getGeckoSelection = function () {
-			var text = document.getSelection().toString();
+			const text = document.getSelection().toString();
 
 			// TODO try to get prefix and suffix
 			return that.createSelectionObject(text, '', '');
 		};
 
 		that.getTridentSelection = function () {
-			var selection = document.selection,
+			const selection = document.selection,
 				range = selection.createRange,
 				text = range.text,
 				node = that.getSelectionContainer(range.parentElement()),
@@ -789,7 +710,8 @@
 		};
 
 		that.getMousePosition = function (e) {
-			var pos = {'x': 0, 'y': 0};
+			let pos = {'x': 0, 'y': 0};
+
 			if (e) {
 				if (e.pageX || e.pageY) {
 					pos.x = e.pageX;
@@ -803,7 +725,7 @@
 		};
 
 		that.truncateText = function (text, length) {
-			var words = text.replace(/(\r|\n|\t)+/g, ' ').replace(/(\s)+/g, ' ').split(' ').filter(Boolean),
+			let words = text.replace(/(\r|\n|\t)+/g, ' ').replace(/(\s)+/g, ' ').split(' ').filter(Boolean),
 				start = Math.min(words.length, Math.abs(length)),
 				result = '';
 
