@@ -1,4 +1,3 @@
-//phpcs:disable
 /**
  * Proofreader
  *
@@ -10,7 +9,7 @@
  */
 
 (function ($) {
-	$.fn.proofreader = function (options, messages) {
+	$.fn.proofreader = function (options) {
 		let $container = this,
 			that = {
 				initialized    : false,
@@ -26,8 +25,6 @@
 				'typoSuffixElementSelector': '#proofreader_typo_suffix',
 				'highlightClass'           : 'proofreader_highlight',
 				'messageErrorClass'        : 'proofreader_message_error',
-				'popupMessageErrorClass'   : 'proofreader_popup_message_error',
-				'popupMessageSuccessClass' : 'proofreader_popup_message_success',
 				'floatingButtonClass'      : 'proofreader_mouse',
 				'floatingButtonOffset'     : 15,
 				'floatingButtonDelay'      : 2000,
@@ -36,13 +33,7 @@
 				'showWordsBefore'          : 10,
 				'showWordsAfter'           : 10,
 				'handlerType'              : 'keyboard'
-			}, options),
-			l10n = $.extend({
-				'reportTypo'           : 'Report a typo',
-				'thankYou'             : 'Thank you for reporting the typo!',
-				'browserIsNotSupported': 'Your browser does not support selection handling.',
-				'selectionIsTooLarge'  : 'You have selected too large text block!'
-			}, messages);
+			}, options);
 
 		that.init = function () {
 			that.clearSelectionObject();
@@ -51,13 +42,11 @@
 				that.initForm();
 			}
 
-			if (pluginSettings.handlerType === 'keyboard'
-				|| pluginSettings.handlerType === 'both') {
+			if (pluginSettings.handlerType === 'keyboard' || pluginSettings.handlerType === 'both') {
 				that.addKeyboardEvents();
 			}
 
-			if (pluginSettings.handlerType === 'mouse'
-				|| pluginSettings.handlerType === 'both') {
+			if (pluginSettings.handlerType === 'mouse' || pluginSettings.handlerType === 'both') {
 				that.addSelectionEvents();
 			}
 		};
@@ -66,15 +55,6 @@
 			that.$form = $container.find('form').first();
 
 			if (that.$form.length) {
-				/*that.$form
-					.on('click', function (e) {
-						return that.isSubmitButtonClick(e);
-					})
-					.on('submit', function (e) {
-						that.submitForm();
-						return false;
-					});*/
-
 				that.$messagesContainer = $(pluginSettings.messagesContainerSelector);
 				that.$typoContainer = $(pluginSettings.typoContainerSelector);
 				that.$typoTextElement = $(pluginSettings.typoTextElementSelector);
@@ -254,11 +234,9 @@
 		that.showProofreader = function () {
 			if (that.canShowProofreader()) {
 				if (that.selectionObject.text.length > pluginSettings.selectionMaxLength) {
-					if ($container.is(':visible')) {
-						that.showMessage(l10n.selectionIsTooLarge, pluginSettings.popupMessageErrorClass);
-					} else {
-						that.showMessage(l10n.selectionIsTooLarge, pluginSettings.popupMessageErrorClass, true);
-					}
+					const text = Joomla.Text._('COM_PROOFREADER_ERROR_TOO_LARGE_TEXT_BLOCK', 'You have selected too large text block!');
+
+					that.showMessage(text, 'danger', (!$container.is(':visible')));
 
 					return;
 				}
@@ -328,10 +306,10 @@
 						}
 
 						if (pluginSettings.highlightTypos) {
-							that.highlightTypo($('.proofreader_highlight'), that.$form.find('#proofreader_typo_text').val());
+							that.highlightTypo($('.' + pluginSettings.highlightClass), that.$form.find('#proofreader_typo_text').val());
 						}
 
-						that.showMessage(l10n.thankYou, 'success', true);
+						that.showMessage(Joomla.Text._('COM_PROOFREADER_MESSAGE_THANK_YOU', 'Thank you for reporting the typo!'), 'success', true);
 						that.clearSelectionObject();
 					}
 				},
@@ -385,7 +363,7 @@
 			const mousePos = that.getMousePosition(e);
 
 			that.$floatingButton = $('<div>', {
-					'text' : l10n.reportTypo,
+					'text' : Joomla.Text._('COM_PROOFREADER_BUTTON_REPORT_TYPO', 'Report a typo'),
 					'class': pluginSettings.floatingButtonClass
 				})
 				.css({
@@ -455,19 +433,6 @@
 							'text': that.selectionObject.suffix
 						}));
 				}
-			}
-		};
-
-		that.renderFormMessages = function (messages) {
-			if (that.initialized && that.$messagesContainer.length) {
-				that.removeFormMessages();
-				$.each(messages, function (index, message) {
-					that.$messagesContainer
-						.append($('<div>', {
-							'text' : message,
-							'class': pluginSettings.messageErrorClass
-						}));
-				});
 			}
 		};
 
@@ -615,7 +580,7 @@
 				that.selectionObject = that.getTridentSelection();
 			} else {
 				that.clearSelectionObject();
-				that.showMessage(l10n.browserIsNotSupported, pluginSettings.popupMessageErrorClass, true);
+				that.showMessage(Joomla.Text._('COM_PROOFREADER_ERROR_BROWSER_IS_NOT_SUPPORTED', 'Your browser does not support selection handling.'), 'danger', true);
 			}
 
 			if (that.selectionObject.text === '') {

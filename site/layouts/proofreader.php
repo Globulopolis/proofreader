@@ -51,12 +51,6 @@ HTMLHelper::_('bootstrap.toast', '#proofreaderToast');
 			<?php endif; ?>
 			'selectionMaxLength' : <?php echo $displayData['options']['selection_limit']; ?>,
 			'floatingButtonDelay': 4000
-		},
-		{
-			'reportTypo'           : Joomla.Text._('COM_PROOFREADER_BUTTON_REPORT_TYPO'),
-			'thankYou'             : Joomla.Text._('COM_PROOFREADER_MESSAGE_THANK_YOU'),
-			'browserIsNotSupported': Joomla.Text._('COM_PROOFREADER_ERROR_BROWSER_IS_NOT_SUPPORTED'),
-			'selectionIsTooLarge'  : Joomla.Text._('COM_PROOFREADER_ERROR_TOO_LARGE_TEXT_BLOCK')
 		});
 	});
 </script>
