@@ -13,3 +13,7 @@ Supported services and plugins:
 [hCaptcha](https://extensions.joomla.org/extension/hcaptcha/)
 
 [Cloudflare Turnstile](https://github.com/SharkyKZ/joomla-turnstile-plugin)
+
+#### Note!
+
+Tag `{proofreader-prompt}` will replace within content with Proofreader's prompt block.
