@@ -94,9 +94,8 @@ final class Proofreader extends CMSPlugin implements SubscriberInterface
 		$document = $this->app->getDocument();
 		$print    = (int) $this->app->input->get('print', 0);
 		$offline  = (int) $this->app->get('offline', 0);
-		$debug    = (int) $this->app->get('debug', 0);
 
-		if ($this->app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && ($offline === 0 || $debug === 1))
+		if ($this->app->getName() == 'site' && $document->getType() == 'html' && $print === 0 && ($offline === 0))
 		{
 			$buffer = $this->app->getBody();
 			$form   = $this->app->getUserState('com_proofreader.typo.form');
@@ -135,11 +134,10 @@ final class Proofreader extends CMSPlugin implements SubscriberInterface
 		$document = $this->app->getDocument();
 		$print    = $this->app->input->getInt('print', 0);
 		$offline  = (int) $this->app->get('offline', 0);
-		$debug    = (int) $this->app->get('debug', 0);
 
 		if ($document->getType() == 'html')
 		{
-			if ($print === 0 && ($offline === 0 || $debug === 1))
+			if ($print === 0 && ($offline === 0))
 			{
 				/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
 				$wa = $document->getWebAssetManager();
