@@ -135,6 +135,11 @@ final class Proofreader extends CMSPlugin implements SubscriberInterface
 		$print    = $this->app->input->getInt('print', 0);
 		$offline  = (int) $this->app->get('offline', 0);
 
+		if (!$this->app->isClient('site'))
+		{
+			return;
+		}
+
 		if ($document->getType() == 'html')
 		{
 			if ($print === 0 && ($offline === 0))

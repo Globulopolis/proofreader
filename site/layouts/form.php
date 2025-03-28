@@ -28,6 +28,7 @@ echo $displayData['event']->proofreaderFormBeforeDisplay;
 		'selector' => 'proofreaderModal',
 		'params'   => [
 			'modalCss' => 'modal-dialog-centered modal-lg',
+			'backdrop' => 'static',
 			'title'    => Text::_('COM_PROOFREADER_HEADER'),
 			'footer'   => LayoutHelper::render('form-modal-footer', null, JPATH_SITE . '/components/com_proofreader/layouts')
 		],
