@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `#__proofreader_typos` (
   `typo_text` TEXT NOT NULL,
   `typo_prefix` TEXT NOT NULL,
   `typo_suffix` TEXT NOT NULL,
-  `typo_comment` TEXT NOT NULL,
+  `typo_comment` TEXT DEFAULT NULL,
   `page_url` VARCHAR(255) NOT NULL DEFAULT '',
   `page_title` VARCHAR(255) NOT NULL DEFAULT '',
   `page_language` VARCHAR(255) NOT NULL DEFAULT '',
