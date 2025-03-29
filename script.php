@@ -64,16 +64,6 @@ class com_proofreaderInstallerScript
 			$db->setQuery($query);
 			$db->execute();
 		}
-
-		$deprecatedFiles = array(JPATH_SITE . '/components/com_proofreader/controllers/typo.raw.php');
-
-		foreach ($deprecatedFiles as $file)
-		{
-			if (is_file($file))
-			{
-				File::delete($file);
-			}
-		}
 	}
 
 	public function uninstall($parent)
