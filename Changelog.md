@@ -1,13 +1,25 @@
-3.0.2 - January 13, 2024
+### 3.0.3 - March 29, 2025
+
+Removed unused files
+
+Drop Azure support
+
+Fixed quick icon plugin group
+
+Modal backdrop set to static
+
+Other bugfixes
+
+### 3.0.2 - January 13, 2024
 
 The component now also works in debug mode.
 Small fixes.
 
-3.0.1 - January 5, 2024
+### 3.0.1 - January 5, 2024
 
 Small fixes.
 
-3.0.0 - December 30, 2024
+### 3.0.0 - December 30, 2024
 
 Add compatibility with Joomla 5:
   - Behavior - Compatibility plugin is not required anymore;
