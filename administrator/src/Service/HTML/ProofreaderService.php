@@ -9,10 +9,10 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Proofreader\Administrator\Service\Html;
+namespace Joomla\Component\Proofreader\Administrator\Service\HTML;
 
 defined('_JEXEC') or die;
 
-class Proofreader
+class ProofreaderService
 {
 }
