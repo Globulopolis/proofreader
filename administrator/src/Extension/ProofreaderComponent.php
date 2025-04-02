@@ -21,7 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Fields\FieldsServiceInterface;
 use Joomla\CMS\HTML\HTMLRegistryAwareTrait;
 use Joomla\CMS\Language\Text;
-use Joomla\Component\Proofreader\Administrator\Service\Html\Proofreader;
+use Joomla\Component\Proofreader\Administrator\Service\HTML\ProofreaderService;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -50,7 +50,7 @@ class ProofreaderComponent extends MVCComponent implements BootableExtensionInte
 	public function boot(ContainerInterface $container)
 	{
 		// Register HTML helper
-		$this->getRegistry()->register('proofreader', new Proofreader);
+		$this->getRegistry()->register('proofreader', new ProofreaderService());
 	}
 
 	/**

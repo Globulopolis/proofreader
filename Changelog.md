@@ -1,3 +1,8 @@
+### 3.0.4 - April 02, 2025
+
+Fixed bug with "class not found"
+
+
 ### 3.0.3 - March 29, 2025
 
 Removed unused files
