@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" method="upgrade">
     <name>com_proofreader</name>
-    <creationDate>11/07/2015</creationDate>
+    <creationDate>11/04/2025</creationDate>
     <author>Sergey M. Litvinov; Pavel Syomin, Globulopolis</author>
     <authorEmail>pas.ntg@gmail.com</authorEmail>
     <copyright>Copyright 2005-2015 JoomlaTune.ru; Copyright 2022-2025 Pavel Syomin; Copyright 2024-2025 Globuloplis. All rights reserved!</copyright>
