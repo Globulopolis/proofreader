@@ -41,3 +41,5 @@ Model now add a log entry if mail not available for some reason.
 Some component CSS removed because uses bootstrap CSS.
 
 Minimum required Joomla version is 4.4.0.
+
+Based on Proofreader 2.x (legacy) but almost completely rewritten.
